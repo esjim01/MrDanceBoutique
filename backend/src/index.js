@@ -22,10 +22,12 @@ const __dirname = path.dirname(__filename);
 // Middlewares
 app.use(cors());
 app.use(morgan('dev')); 
-app.use(express.json()); 
+app.use(express.json());
+// 1. Apuntar directamente a la carpeta "frontend" para que encuentre el index.html
+app.use(express.static(path.join(__dirname, '../frontend'))); 
 
-// Hacer la carpeta "uploads" pública
-app.use('/uploads', express.static('uploads'));
+// 2. Hacer la ruta uploads más segura usando path.join (mejor para Hostinger)
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Asegurarse de que la carpeta uploads exista
 if (!fs.existsSync('./uploads')) {
