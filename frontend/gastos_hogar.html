@@ -217,7 +217,7 @@
         async function cargarDatos() {
             try {
                 // Llama al backend si ya lo tienes:
-                const res = await fetch("https://app.mrdanceboutique.com/api/gastos-hogar");
+                const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/gastos-hogar");
                 if (res.ok) {
                     gastosHogar = await res.json();
                 }
@@ -328,7 +328,7 @@
                 if (idGastoEditando) {
                     // MODO EDICIÓN (PUT)
                     payload.id = idGastoEditando;
-                    const res = await fetch(`https://app.mrdanceboutique.com/api//gastos-hogar/${idGastoEditando}`, {
+                    const res = await fetch(`https://mrdanceboutique.mrtangoshoes.com/api/gastos-hogar/${idGastoEditando}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -340,7 +340,7 @@
                 } else {
                     // MODO CREACIÓN (POST)
                     payload.id = Date.now();
-                    const res = await fetch("https://app.mrdanceboutique.com/api//gastos-hogar", {
+                    const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/gastos-hogar", {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -374,7 +374,7 @@
         async function eliminarGasto(id) {
             if (!confirm("¿Estás seguro de borrar este registro?")) return;
             try {
-                await fetch(`https://app.mrdanceboutique.com/api//gastos-hogar/${id}`, { method: 'DELETE' });
+                await fetch(`https://mrdanceboutique.mrtangoshoes.com/api/gastos-hogar/${id}`, { method: 'DELETE' });
             } catch (e) {
                 console.warn("Borrado local");
             }

@@ -412,7 +412,7 @@
 
     async function obtenerZapatos() {
       try {
-        const res = await fetch("https://app.mrdanceboutique.com/api//inventario");
+        const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/inventario");
         productosCache = await res.json();
         renderizarTabla(productosCache);
       } catch (err) {
@@ -466,7 +466,7 @@
 
         // 1. Corregimos la ruta de la imagen (asegúrate que zapato.imagen traiga la ruta)
         const imgHtml = zapato.imagen
-          ? `<img src="http://localhost:4000/uploads/${zapato.imagen}" alt="${zapato.referencia}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-sm">`
+          ? `<img src="https://mrdanceboutique.mrtangoshoes.com/uploads/${zapato.imagen}" alt="${zapato.referencia}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-sm">`
           : `<div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-[10px] text-slate-400 font-bold border border-dashed border-slate-300">SIN FOTO</div>`;
 
         tabla.innerHTML += `
@@ -551,7 +551,7 @@
         formData.append("imagen", fotoInput.files[0]);
       }
 
-      const res = await fetch("https://app.mrdanceboutique.com/api//inventario", {
+      const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/inventario", {
         method: "POST",
         body: formData // Importante: Sin Headers de Content-Type, el navegador lo pone solo
       });
@@ -600,7 +600,7 @@
 
         // Validación simple antes de enviar
         const res = await fetch(
-          `https://app.mrdanceboutique.com/api//inventario/${id}`,
+          `https://mrdanceboutique.mrtangoshoes.com/api/inventario/${id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -615,7 +615,7 @@
 
     async function eliminarZapato(id) {
       if (confirm("¿Eliminar definitivamente?")) {
-        await fetch(`https://app.mrdanceboutique.com/api/inventario/${id}`, {
+        await fetch(`https://mrdanceboutique.mrtangoshoes.com/api/inventario/${id}`, {
           method: "DELETE",
         });
         obtenerZapatos();

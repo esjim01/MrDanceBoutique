@@ -155,8 +155,8 @@
             try {
                 // LLamamos a nuestras APIs
                 const [resVentas, resGastos] = await Promise.all([
-                    fetch("https://app.mrdanceboutique.com/api/ventas").catch(() => ({ok: false})),
-                    fetch("https://app.mrdanceboutique.com/api/gastos").catch(() => ({ok: false}))
+                    fetch("https://mrdanceboutique.mrtangoshoes.com/api/ventas").catch(() => ({ok: false})),
+                    fetch("https://mrdanceboutique.mrtangoshoes.com/api/gastos").catch(() => ({ok: false}))
                 ]);
 
                 if(resVentas.ok) ventasRaw = await resVentas.json();
