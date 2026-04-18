@@ -306,7 +306,7 @@
         async function obtenerGastos() {
             try {
                 // Ya tienes el backend listo, así que usamos el fetch real:
-                const res = await fetch("http://localhost:4000/api/gastos");
+                const res = await fetch("https://app.mrdanceboutique.com/api/gastos");
                 gastosCache = await res.json();
 
                 aplicarFiltroMes(); // Filtra y renderiza
@@ -441,7 +441,7 @@
             }
 
             try {
-                const res = await fetch("http://localhost:4000/api/gastos", {
+                const res = await fetch("https://app.mrdanceboutique.com/api//gastos", {
                     method: "POST",
                     body: formData
                 });
@@ -491,7 +491,7 @@
             };
 
             try {
-                const res = await fetch(`http://localhost:4000/api/gastos/${gastoEditandoId}`, {
+                const res = await fetch(`https://app.mrdanceboutique.com/api//gastos/${gastoEditandoId}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(datosEditados)
@@ -511,7 +511,7 @@
         async function eliminarGasto(id) {
             if (confirm("¿Estás seguro de eliminar este gasto? El recibo físico también se borrará.")) {
                 try {
-                    await fetch(`http://localhost:4000/api/gastos/${id}`, { method: "DELETE" });
+                    await fetch(`https://app.mrdanceboutique.com/api//gastos/${id}`, { method: "DELETE" });
                     obtenerGastos();
                 } catch (err) {
                     console.error(err);

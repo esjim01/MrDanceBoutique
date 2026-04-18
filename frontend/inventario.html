@@ -412,7 +412,7 @@
 
     async function obtenerZapatos() {
       try {
-        const res = await fetch("http://localhost:4000/api/inventario");
+        const res = await fetch("https://app.mrdanceboutique.com/api//inventario");
         productosCache = await res.json();
         renderizarTabla(productosCache);
       } catch (err) {
@@ -551,7 +551,7 @@
         formData.append("imagen", fotoInput.files[0]);
       }
 
-      const res = await fetch("http://localhost:4000/api/inventario", {
+      const res = await fetch("https://app.mrdanceboutique.com/api//inventario", {
         method: "POST",
         body: formData // Importante: Sin Headers de Content-Type, el navegador lo pone solo
       });
@@ -600,7 +600,7 @@
 
         // Validación simple antes de enviar
         const res = await fetch(
-          `http://localhost:4000/api/inventario/${id}`,
+          `https://app.mrdanceboutique.com/api//inventario/${id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -615,7 +615,7 @@
 
     async function eliminarZapato(id) {
       if (confirm("¿Eliminar definitivamente?")) {
-        await fetch(`http://localhost:4000/api/inventario/${id}`, {
+        await fetch(`https://app.mrdanceboutique.com/api/inventario/${id}`, {
           method: "DELETE",
         });
         obtenerZapatos();

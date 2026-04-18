@@ -332,7 +332,7 @@
 
         async function obtenerInventario() {
             try {
-                const res = await fetch("http://localhost:4000/api/inventario");
+                const res = await fetch("https://app.mrdanceboutique.com/api/inventario");
                 inventarioCache = await res.json();
                 aplicarFiltros();
             } catch (error) { console.error(error); }
@@ -340,7 +340,7 @@
 
         async function obtenerVentas() {
             try {
-                const res = await fetch("http://localhost:4000/api/ventas");
+                const res = await fetch("https://app.mrdanceboutique.com/api/ventas");
                 if (res.ok) ventasCache = await res.json();
                 filtrarHistorialVentas();
             } catch (error) { console.error(error); }
@@ -537,7 +537,7 @@
             };
 
             try {
-                const res = await fetch("http://localhost:4000/api/ventas", {
+                const res = await fetch("https://app.mrdanceboutique.com/api/ventas", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(ventaFinal)
@@ -620,7 +620,7 @@
         function anularVenta(idVenta) {
             mostrarConfirmacion("¿Anular esta venta? Los zapatos volverán automáticamente al inventario.", async () => {
                 try {
-                    await fetch(`http://localhost:4000/api/ventas/${idVenta}`, { method: "DELETE" });
+                    await fetch(`https://app.mrdanceboutique.com/api/ventas/${idVenta}`, { method: "DELETE" });
                     mostrarAlerta("Anulada", "La venta ha sido anulada y el stock devuelto.", "success");
                     await obtenerInventario();
                     await obtenerVentas();

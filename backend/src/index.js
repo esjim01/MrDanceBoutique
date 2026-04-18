@@ -43,7 +43,7 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'success', message: 'Servidor operando 👞' });
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;//
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
