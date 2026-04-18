@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gastos Hogar | Personal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Mantenemos el header del negocio para dar uniformidad */
+        .header-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Ocultar flechas de los input type number */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <nav class="header-gradient text-white px-8 py-4 shadow-xl flex justify-between items-center z-50">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">🏠</span>
+            <h1 class="font-extrabold text-xl tracking-tight text-white">FINANZAS <span
+                    class="text-emerald-400 font-light">Y CONTROL DE GASTOS HOGAR</span></h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <span id="userNameDisplay"
+                class="text-xs font-bold bg-white/10 px-3 py-1 rounded-full uppercase text-white">Cargando...</span>
+            <button onclick="logout()"
+                class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/50 px-5 py-1.5 rounded-lg text-sm font-bold transition-all">SALIR</button>
+        </div>
+    </nav>
+
+    <div class="flex flex-1 overflow-hidden bg-slate-50">
+
+        <aside class="w-60 bg-[#ffffff] flex flex-col flex-shrink-0 shadow-2xl border-r border-slate-200 z-30">
+            <nav class="flex-1 p-4 space-y-1 mt-4">
+                <p class="text-[10px] font-black text-slate-400 uppercase px-4 mb-2 tracking-widest">Mi Negocio</p>
+                <a href="inventario.html"
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all"><span>👠</span>
+                    Administrar Boutique</a>
+
+                <div class="h-px bg-slate-200 my-4"></div>
+
+                <p class="text-[10px] font-black text-slate-400 uppercase px-4 mb-2 tracking-widest">Mi Vida</p>
+                <a href="gastos_hogar.html"
+                    class="flex items-center gap-3 bg-emerald-50 text-emerald-600 px-4 py-3 rounded-xl font-bold text-sm transition-all border-l-4 border-emerald-500"><span>🏠</span>
+                    Administrar Gastos Hogar</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-8 relative">
+            <div class="max-w-6xl mx-auto pb-12">
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-2xl card-shadow border border-slate-100 relative overflow-hidden">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-rose-50 rounded-full opacity-50"></div>
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1 relative z-10">Gasto
+                            Mes Actual</h3>
+                        <p id="totalMes" class="text-3xl font-extrabold text-slate-900 relative z-10">$0</p>
+                    </div>
+
+                    <div
+                        class="bg-slate-900 p-6 rounded-2xl shadow-xl shadow-slate-300 text-white relative overflow-hidden">
+                        <div class="absolute right-0 top-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10"></div>
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1 relative z-10">
+                            Define Presupuesto Límite</h3>
+                        <div class="flex items-center gap-2 relative z-10">
+                            <span class="text-2xl font-extrabold text-emerald-400">$</span>
+                            <input type="number" id="presupuestoInput" value="2000000" onchange="actualizarKpis()"
+                                class="bg-transparent text-3xl font-extrabold border-none outline-none w-full text-white placeholder-slate-500">
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white p-6 rounded-2xl card-shadow border border-slate-100 flex flex-col justify-center">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Estado Presupuesto
+                        </h3>
+                        <div class="w-full bg-slate-100 h-4 rounded-full mt-2 overflow-hidden shadow-inner">
+                            <div id="barraProgreso" class="bg-emerald-500 h-full transition-all duration-500"
+                                style="width: 0%"></div>
+                        </div>
+                        <p id="txtProgreso" class="text-[11px] font-bold text-slate-500 mt-2 text-right">0% consumido
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                    <div class="lg:col-span-4 space-y-6">
+                        <div class="bg-white p-6 rounded-2xl card-shadow border border-slate-100">
+                            <h2
+                                class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4 flex items-center gap-2">
+                                📝 Registrar Gasto</h2>
+                            <form id="formGastoHogar" class="space-y-4">
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Concepto /
+                                        Descripción</label>
+                                    <input type="text" id="hogarConcepto" required placeholder="Ej: Mercado Quincena"
+                                        class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-[10px] font-bold text-slate-400 uppercase">Valor ($)</label>
+                                        <input type="number" id="hogarValor" required placeholder="0"
+                                            class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-bold text-slate-400 uppercase">Categoría</label>
+                                        <select id="hogarCategoria"
+                                            class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                            <option>Alimentación</option>
+                                            <option>Vivienda</option>
+                                            <option>Servicios</option>
+                                            <option>Transporte</option>
+                                            <option>Salud</option>
+                                            <option>Educación</option>
+                                            <option>Ocio/Diversión</option>
+                                            <option>Otros</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-400 uppercase">Fecha</label>
+                                    <input type="date" id="hogarFecha" required
+                                        class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                </div>
+                                <button type="submit"
+                                    class="w-full bg-emerald-500 text-white py-3 rounded-xl font-bold text-sm hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-200 active:scale-95">Guardar
+                                    Gasto</button>
+                            </form>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl card-shadow border border-slate-100">
+                            <h2 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">📊
+                                Distribución</h2>
+                            <div class="relative h-[220px] w-full flex justify-center">
+                                <canvas id="chartHogar"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-8 space-y-6">
+                        <div
+                            class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden flex flex-col h-[650px]">
+
+                            <div
+                                class="px-6 py-4 bg-white border-b border-slate-100 flex justify-between items-center z-20">
+                                <h2 class="text-sm font-black text-slate-800 uppercase tracking-tight">Historial de
+                                    Gastos</h2>
+                                <button onclick="exportarExcelHogar()"
+                                    class="flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-2 rounded-lg font-bold text-xs hover:bg-slate-200 transition-all">
+                                    <span>📥</span> Exportar a Excel
+                                </button>
+                            </div>
+
+                            <div class="flex-1 overflow-y-auto relative">
+                                <table class="w-full text-left border-collapse">
+                                    <thead
+                                        class="bg-slate-50 sticky top-0 z-10 text-[10px] font-black text-slate-400 uppercase shadow-sm">
+                                        <tr>
+                                            <th class="px-6 py-4">Fecha</th>
+                                            <th class="px-6 py-4">Categoría</th>
+                                            <th class="px-6 py-4">Concepto</th>
+                                            <th class="px-6 py-4">Valor</th>
+                                            <th class="px-6 py-4 text-center">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tablaHogar" class="divide-y divide-slate-100 text-sm bg-white">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let gastosHogar = [];
+        let miChart = null;
+        let idGastoEditando = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulando usuario (ajusta esto si tienes el login conectado)
+            document.getElementById('userNameDisplay').textContent = "Admin";
+
+            // Fecha por defecto hoy
+            document.getElementById('hogarFecha').valueAsDate = new Date();
+
+            cargarDatos();
+        });
+
+        async function cargarDatos() {
+            try {
+                // Llama al backend si ya lo tienes:
+                const res = await fetch("http://localhost:4000/api/gastos-hogar");
+                if (res.ok) {
+                    gastosHogar = await res.json();
+                }
+            } catch (e) {
+                console.warn("Modo local: Aún no hay conexión al servidor para gastos de hogar.");
+            }
+            renderizarTodo();
+        }
+
+        function renderizarTodo() {
+            renderTable();
+            actualizarKpis();
+            renderChart();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tablaHogar');
+            tbody.innerHTML = '';
+
+            const ordenados = [...gastosHogar].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            if (ordenados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-slate-400 font-bold text-sm">No hay gastos registrados aún.</td></tr>`;
+                return;
+            }
+
+            ordenados.forEach(g => {
+                const coloresCat = {
+                    'Alimentación': 'bg-emerald-100 text-emerald-700', 'Vivienda': 'bg-blue-100 text-blue-700',
+                    'Servicios': 'bg-orange-100 text-orange-700', 'Transporte': 'bg-purple-100 text-purple-700',
+                    'Salud': 'bg-rose-100 text-rose-700', 'Educación': 'bg-indigo-100 text-indigo-700',
+                    'Ocio/Diversión': 'bg-pink-100 text-pink-700', 'Otros': 'bg-slate-200 text-slate-700'
+                };
+                const claseColor = coloresCat[g.categoria] || coloresCat['Otros'];
+
+                tbody.innerHTML += `
+            <tr class="hover:bg-slate-50 transition-colors group">
+                <td class="px-6 py-4 font-medium text-slate-500">${g.fecha}</td>
+                <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-md text-[10px] font-extrabold uppercase tracking-wide ${claseColor}">${g.categoria}</span></td>
+                <td class="px-6 py-4 font-bold text-slate-700 truncate max-w-[200px]">${g.concepto}</td>
+                <td class="px-6 py-4 font-black text-slate-900">$${Number(g.valor).toLocaleString()}</td>
+                <td class="px-6 py-4 text-center space-x-3">
+                    <button onclick="editarGasto(${g.id})" class="text-slate-300 hover:text-blue-500 transition-colors" title="Editar">✏️</button>
+                    <button onclick="eliminarGasto(${g.id})" class="text-slate-300 hover:text-rose-500 transition-colors" title="Eliminar">🗑️</button>
+                </td>
+            </tr>
+        `;
+            });
+        }
+
+        // NUEVA FUNCIÓN PARA EDITAR
+        function editarGasto(id) {
+            const gasto = gastosHogar.find(g => g.id === id);
+            if (!gasto) return;
+
+            idGastoEditando = id; // Guardamos el ID que estamos editando
+
+            // Llenamos el formulario con los datos del gasto
+            document.getElementById('hogarConcepto').value = gasto.concepto;
+            document.getElementById('hogarValor').value = gasto.valor;
+            document.getElementById('hogarCategoria').value = gasto.categoria;
+            document.getElementById('hogarFecha').value = gasto.fecha;
+
+            // Cambiamos el estilo del botón para que sea obvio que estamos editando
+            const btnSubmit = document.querySelector('#formGastoHogar button[type="submit"]');
+            btnSubmit.textContent = "Actualizar Gasto";
+            btnSubmit.classList.replace('bg-emerald-500', 'bg-blue-500');
+            btnSubmit.classList.replace('hover:bg-emerald-600', 'hover:bg-blue-600');
+            btnSubmit.classList.replace('shadow-emerald-200', 'shadow-blue-200');
+        }
+
+
+
+        function actualizarKpis() {
+            const total = gastosHogar.reduce((sum, g) => sum + Number(g.valor), 0);
+            const inputPresupuesto = document.getElementById('presupuestoInput').value;
+            const presupuesto = Number(inputPresupuesto) || 1; // Evitar división por cero
+
+            document.getElementById('totalMes').textContent = `$${total.toLocaleString()}`;
+
+            const porcentaje = Math.min((total / presupuesto) * 100, 100);
+            const barra = document.getElementById('barraProgreso');
+            barra.style.width = porcentaje + '%';
+
+            // Cambiar color barra si se pasa del 90%
+            if (porcentaje >= 100) {
+                barra.className = 'bg-rose-600 h-full transition-all duration-500';
+            } else if (porcentaje > 85) {
+                barra.className = 'bg-orange-500 h-full transition-all duration-500';
+            } else {
+                barra.className = 'bg-emerald-500 h-full transition-all duration-500';
+            }
+
+            document.getElementById('txtProgreso').textContent = `${porcentaje.toFixed(1)}% consumido`;
+        }
+
+        document.getElementById('formGastoHogar').onsubmit = async (e) => {
+            e.preventDefault();
+
+            const payload = {
+                concepto: document.getElementById('hogarConcepto').value,
+                valor: Number(document.getElementById('hogarValor').value),
+                categoria: document.getElementById('hogarCategoria').value,
+                fecha: document.getElementById('hogarFecha').value
+            };
+
+            try {
+                if (idGastoEditando) {
+                    // MODO EDICIÓN (PUT)
+                    payload.id = idGastoEditando;
+                    const res = await fetch(`http://localhost:4000/api/gastos-hogar/${idGastoEditando}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        const index = gastosHogar.findIndex(g => g.id === idGastoEditando);
+                        gastosHogar[index] = payload;
+                    }
+                } else {
+                    // MODO CREACIÓN (POST)
+                    payload.id = Date.now();
+                    const res = await fetch("http://localhost:4000/api/gastos-hogar", {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) gastosHogar.push(payload);
+                }
+            } catch (error) {
+                console.warn("Error de conexión, guardando localmente (Modo sin internet)");
+                if (idGastoEditando) {
+                    const index = gastosHogar.findIndex(g => g.id === idGastoEditando);
+                    gastosHogar[index] = payload;
+                } else {
+                    payload.id = Date.now();
+                    gastosHogar.push(payload);
+                }
+            }
+
+            // Limpiar y resetear el formulario al estado original
+            idGastoEditando = null;
+            document.getElementById('formGastoHogar').reset();
+            document.getElementById('hogarFecha').valueAsDate = new Date();
+
+            const btnSubmit = document.querySelector('#formGastoHogar button[type="submit"]');
+            btnSubmit.textContent = "Guardar Gasto";
+            btnSubmit.classList.replace('bg-blue-500', 'bg-emerald-500');
+            btnSubmit.classList.replace('hover:bg-blue-600', 'hover:bg-emerald-600');
+            btnSubmit.classList.replace('shadow-blue-200', 'shadow-emerald-200');
+
+            renderizarTodo();
+        };
+        async function eliminarGasto(id) {
+            if (!confirm("¿Estás seguro de borrar este registro?")) return;
+            try {
+                await fetch(`http://localhost:4000/api/gastos-hogar/${id}`, { method: 'DELETE' });
+            } catch (e) {
+                console.warn("Borrado local");
+            }
+            gastosHogar = gastosHogar.filter(g => g.id !== id);
+            renderizarTodo();
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('chartHogar').getContext('2d');
+            if (miChart) miChart.destroy();
+
+            if (gastosHogar.length === 0) return;
+
+            const agrupa = {};
+            gastosHogar.forEach(g => {
+                agrupa[g.categoria] = (agrupa[g.categoria] || 0) + Number(g.valor);
+            });
+
+            // Paleta de colores elegante
+            const colores = ['#10b981', '#3b82f6', '#f97316', '#a855f7', '#f43f5e', '#6366f1', '#ec4899', '#94a3b8'];
+
+            miChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(agrupa),
+                    datasets: [{
+                        data: Object.values(agrupa),
+                        backgroundColor: colores,
+                        borderWidth: 0,
+                        hoverOffset: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { boxWidth: 10, font: { family: 'Plus Jakarta Sans', size: 11, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // LÓGICA DE EXPORTACIÓN A EXCEL
+        function exportarExcelHogar() {
+            if (gastosHogar.length === 0) {
+                alert("No hay gastos registrados para exportar.");
+                return;
+            }
+
+            // Preparar los datos mapeándolos a español para las columnas
+            const filasExcel = gastosHogar.map(g => ({
+                "Fecha": g.fecha,
+                "Categoría": g.categoria,
+                "Concepto / Descripción": g.concepto,
+                "Valor Pagado ($)": g.valor
+            }));
+
+            // Crear el libro de trabajo y la pestaña
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(filasExcel);
+
+            // Ajustar ancho de columnas para que se vea bien
+            ws['!cols'] = [{ wch: 12 }, { wch: 20 }, { wch: 40 }, { wch: 15 }];
+
+            XLSX.utils.book_append_sheet(wb, ws, "Mis_Gastos");
+
+            // Descargar el archivo
+            XLSX.writeFile(wb, "Reporte_Gastos_Personales.xlsx");
+        }
+
+        function logout() { localStorage.clear(); window.location.href = "index.html"; }
+
+    </script>
+</body>
+
+</html>

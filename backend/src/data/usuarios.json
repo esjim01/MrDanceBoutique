@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "nombre": "Stiven",
+    "usuario": "Stiven",
+    "password": "admin", 
+    "rol": "admin"
+  },
+  {
+    "id": 2,
+    "nombre": "Dianis Gamarra",
+    "usuario": "Dianis",
+    "password": "12345", 
+    "rol": "admin"
+  },
+  {
+    "id": 3,
+    "nombre": "Jorge Nel Giraldo",
+    "usuario": "Jorge",
+    "password": "12345",
+    "rol": "admin"
+  }
+
+]

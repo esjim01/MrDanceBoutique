@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventario | Mr. Dance Boutique</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background-color: #f0f2f5;
+    }
+
+    .header-gradient {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    }
+
+    .custom-shadow {
+      box-shadow:
+        0 10px 25px -5px rgba(0, 0, 0, 0.1),
+        0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body class="text-slate-800">
+  <!-- TOPBAR (sticky dentro de esta columna) -->
+  <nav class="header-gradient text-white px-8 py-4 shadow-xl flex justify-between items-center flex-shrink-0">
+    <div class="flex items-center gap-3">
+      <img src="assets/Logo_Mr_Dance_S_White.png" alt="Mr. Dance Boutique" class="w-auto h-10 object-contain" />
+      <h1 class="font-extrabold text-xl tracking-tight">
+        MR. DANCE <span class="text-blue-400 font-light">BOUTIQUE</span>
+      </h1>
+    </div>
+    <button onclick="logout()"
+      class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/50 px-5 py-1.5 rounded-lg text-sm font-bold transition-all">
+      SALIR
+    </button>
+  </nav>
+
+  <!-- ✅ LAYOUT PRINCIPAL: flex ocupa toda la altura de la pantalla -->
+  <div class="flex h-screen overflow-hidden bg-slate-50">
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="w-60 bg-[#fffff] text-white flex flex-col flex-shrink-0 shadow-2xl">
+      <!-- Navegación -->
+      <nav class="flex-1 p-4 space-y-1 mt-4">
+        <a href="#"
+          class="flex items-center gap-3 bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all border-l-4 border-blue-500">
+          <span>📈</span> Inventario
+        </a>
+        <a href="gastos.html"
+          class="flex items-center gap-3 text-slate-400 hover:text-white hover:bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+          <span>💰</span> Gastos
+        </a>
+        <a href="ventas.html"
+          class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+          <span>🛍️</span> Punto de Venta
+        </a>
+        <a href="reportes.html"
+          class="flex items-center gap-3 text-slate-400 hover:text-white hover:bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+          <span>📊</span> Reportes
+        </a>
+        <a href="gastos_hogar.html"
+          class="flex items-center gap-3 text-slate-400 hover:text-white hover:bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+          <span>🏠</span> Gastos Hogar
+        </a>
+      </nav>
+
+      <!-- Usuario en sidebar -->
+      <div class="p-4 border-t border-slate-800 bg-[#0a0f1d]">
+        <div class="flex items-center gap-3 p-2">
+          <div class="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center font-bold text-lg shadow-inner">
+            <span id="userInitial">A</span>
+          </div>
+          <div class="flex-1 overflow-hidden">
+            <p id="userNameDisplay" class="font-bold text-sm truncate uppercase tracking-tight">
+              Cargando...
+            </p>
+            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+              Administrador
+            </p>
+          </div>
+          <button onclick="logout()" class="text-slate-500 hover:text-red-400 transition-colors">
+            🚪
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ========== ÁREA DERECHA: topbar + contenido ========== -->
+    <div class="flex flex-col flex-1 overflow-hidden">
+      <!-- CONTENIDO PRINCIPAL (scroll aquí, no en toda la página) -->
+      <main class="flex-1 overflow-y-auto p-8">
+        <div class="max-w-[1400px] mx-auto space-y-8">
+          <!-- ── Formulario: Registrar Nueva Referencia ── -->
+          <section class="bg-white rounded-2xl p-8 custom-shadow border border-slate-200">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="h-8 w-2 bg-blue-600 rounded-full"></div>
+              <h2 class="text-2xl font-extrabold text-slate-900 uppercase tracking-tighter">
+                Registrar Nueva Referencia
+              </h2>
+            </div>
+            <form id="formZapato" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Referencia</label>
+                <input type="text" id="ref"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm"
+                  placeholder="Nombre o código" required />
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Categoría</label>
+                <select id="cat"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm">
+                  <option value="" disabled selected>Selec. Dama/Caballero</option>
+                  <option value="Dama">Dama 💃</option>
+                  <option value="Caballero">Caballero 🕺</option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Color</label>
+                <input type="text" id="color"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm"
+                  placeholder="Ej: Bronce" required />
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Talla</label>
+                <select type="text" id="talla"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm"
+                  placeholder="Ej: 37" required>
+                  <option value="" disabled selected>Seleccionar Talla</option>
+                  <option value="30">30</option>
+                  <option value="30.5">30.5</option>
+                  <option value="31">31</option>
+                  <option value="31.5">31.5</option>
+                  <option value="32">32</option>
+                  <option value="32.5">32.5</option>
+                  <option value="33">33</option>
+                  <option value="33.5">33.5</option>
+                  <option value="34">34</option>
+                  <option value="34.5">34.5</option>
+                  <option value="35">35</option>
+                  <option value="35.5">35.5</option>
+                  <option value="36">36</option>
+                  <option value="36.5">36.5</option>
+                  <option value="37">37</option>
+                  <option value="37.5">37.5</option>
+                  <option value="38">38</option>
+                  <option value="38.5">38.5</option>
+                  <option value="39">39</option>
+                  <option value="39.5">39.5</option>
+                  <option value="40">40</option>
+                  <option value="40.5">40.5</option>
+                  <option value="41">41</option>
+                  <option value="41.5">41.5</option>
+                  <option value="42">42</option>
+                  <option value="42.5">42.5</option>
+                  <option value="43">43</option>
+                  <option value="43.5">43.5</option>
+                  <option value="44">44</option>
+                  <option value="44.5">44.5</option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Tacón</label>
+                <select type="text" id="tacon"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm"
+                  placeholder="7.5cm">
+                  <option value="" disabled selected>Seleccionar Tacón</option>
+                  <option value="0">0 cm (Plano)</option>
+                  <option value="0.5">0.5 cm</option>
+                  <option value="1">1 cm</option>
+                  <option value="1.5">1.5 cm</option>
+                  <option value="2">2 cm</option>
+                  <option value="3">3 cm</option>
+                  <option value="4">4 cm</option>
+                  <option value="5">5 cm</option>
+                  <option value="7">7 cm</option>
+                  <option value="7.5">7.5 cm</option>
+                  <option value="8">8 cm</option>
+                </select>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Stock</label>
+                <input type="number" id="cantidad"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 transition outline-none font-semibold"
+                  placeholder="0" required />
+              </div>
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Costo Inversión</label>
+                <input type="number" id="costo"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 transition outline-none font-semibold"
+                  placeholder="$ 0.00" required />
+              </div>
+              <div class="space-y-2 lg:col-span-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Precio Venta</label>
+                <input type="number" id="precioVenta"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 transition outline-none font-semibold"
+                  placeholder="$ 0.00" required />
+              </div>
+              <div class="space-y-2 lg:col-span-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Cargar Foto</label>
+                <input type="file" id="foto" accept="image/*"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+              </div>
+              <div class="flex items-end">
+                <button type="submit"
+                  class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95">
+                  GUARDAR EN STOCK
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- ── Cards de métricas ── -->
+          <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+              <hr class="border-t-2 border-blue-600 w-8 mb-4" />
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Stock Total
+              </p>
+              <div class="flex items-end gap-2 mt-2">
+                <span id="stat-total-qty" class="text-3xl font-extrabold text-slate-900">0</span>
+                <span class="text-xs font-bold text-slate-400 mb-1">Unds</span>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+              <hr class="border-t-2 border-emerald-500 w-8 mb-4" />
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Inversión Total
+              </p>
+              <div class="mt-2">
+                <span id="stat-total-val" class="text-2xl font-extrabold text-slate-900">$ 0</span>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+              <hr class="border-t-2 border-pink-400 w-8 mb-4" />
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Stock Dama
+              </p>
+              <div class="flex items-end gap-2 mt-2">
+                <span id="stat-dama-qty" class="text-3xl font-extrabold text-slate-900">0</span>
+                <span class="text-xs font-bold text-pink-400 mb-1">💃</span>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+              <hr class="border-t-2 border-pink-200 w-8 mb-4" />
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Valor Dama
+              </p>
+              <div class="mt-2">
+                <span id="stat-dama-val" class="text-xl font-extrabold text-slate-900">$ 0</span>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+              <hr class="border-t-2 border-blue-400 w-8 mb-4" />
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Stock Hombre
+              </p>
+              <div class="flex items-end gap-2 mt-2">
+                <span id="stat-hombre-qty" class="text-3xl font-extrabold text-slate-900">0</span>
+                <span class="text-xs font-bold text-blue-400 mb-1">🕺</span>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+              <hr class="border-t-2 border-blue-200 w-8 mb-4" />
+              <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Valor Hombre
+              </p>
+              <div class="mt-2">
+                <span id="stat-hombre-val" class="text-xl font-extrabold text-slate-900">$ 0</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ── Tabla de inventario ── -->
+          <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div
+              class="p-6 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+              <div class="relative w-full md:w-96">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                <input type="text" id="buscador" onkeyup="filtrarProductos()" placeholder="Buscar por referencia..."
+                  class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition shadow-sm" />
+              </div>
+              <div class="flex gap-4">
+                <span
+                  class="bg-white px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 shadow-sm">
+                  TOTAL:
+                  <span id="contador" class="text-blue-600">0</span> PRODUCTOS
+                </span>
+              </div>
+            </div>
+            <div class="overflow-x-auto max-h-[600px] overflow-y-auto" id="contenedorTabla">
+              <table class="w-full text-left border-collapse">
+                <thead class="sticky top-0 bg-slate-800 text-white z-20">
+                  <tr>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider">
+                      Referencia / Detalles
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
+                      Categoría
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
+                      Stock
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
+                      Costo Unit.
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
+                      Precio Venta
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
+                      Ganancia
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-right">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="tablaCuerpo" class="divide-y divide-slate-100"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ========== MODAL EDITAR ========== -->
+  <div id="modalEditar"
+    class="fixed inset-0 bg-slate-900/80 hidden items-center justify-center z-[100] p-4 backdrop-blur-md">
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
+      <div class="header-gradient p-6 text-white flex justify-between items-center">
+        <h3 class="text-xl font-bold uppercase tracking-tight">Editar Referencia</h3>
+        <button onclick="cerrarModal()"
+          class="hover:rotate-90 transition-transform text-2xl font-light">&times;</button>
+      </div>
+      <form id="formEditar" class="p-8 space-y-4">
+        <input type="hidden" id="editId" />
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="col-span-2 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Nombre de Referencia</label>
+            <input type="text" id="editRef"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+              required />
+          </div>
+
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Categoría</label>
+            <select id="editCat"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
+              <option value="Dama">Dama</option>
+              <option value="Caballero">Caballero</option>
+            </select>
+          </div>
+
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Color</label>
+            <input type="text" id="editColor"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm" />
+          </div>
+
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Talla</label>
+            <input type="text" id="editTalla"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm" />
+          </div>
+
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Tacón</label>
+            <input type="text" id="editTacon"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm" />
+          </div>
+
+          <div class="col-span-2 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Stock Disponible</label>
+            <input type="number" id="editStock"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+              required />
+          </div>
+
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Costo ($)</label>
+            <input type="number" id="editCosto"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+              required />
+          </div>
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Venta ($)</label>
+            <input type="number" id="editPrecioVenta"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+              required />
+          </div>
+        </div>
+
+        <div class="flex gap-4 pt-4">
+          <button type="button" onclick="cerrarModal()"
+            class="flex-1 py-3 font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition text-sm">CANCELAR</button>
+          <button type="submit"
+            class="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-sm uppercase">ACTUALIZAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- ========== SCRIPTS ========== -->
+  <script>
+    let productosCache = [];
+
+    async function obtenerZapatos() {
+      try {
+        const res = await fetch("http://localhost:4000/api/inventario");
+        productosCache = await res.json();
+        renderizarTabla(productosCache);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function actualizarMetricas(productos) {
+      let totalStock = 0,
+        totalVal = 0;
+      let damaQty = 0,
+        damaVal = 0;
+      let hombreQty = 0,
+        hombreVal = 0;
+
+      productos.forEach((p) => {
+        const costo = Number(p.costo) || 0;
+        const stock = Number(p.stock) || 0;
+        totalStock += stock;
+        totalVal += stock * costo;
+        if (p.categoria === "Dama") {
+          damaQty += stock;
+          damaVal += stock * costo;
+        } else {
+          hombreQty += stock;
+          hombreVal += stock * costo;
+        }
+      });
+
+      document.getElementById("stat-total-qty").textContent = totalStock;
+      document.getElementById("stat-total-val").textContent =
+        `$ ${totalVal.toLocaleString()}`;
+      document.getElementById("stat-dama-qty").textContent = damaQty;
+      document.getElementById("stat-dama-val").textContent =
+        `$ ${damaVal.toLocaleString()}`;
+      document.getElementById("stat-hombre-qty").textContent = hombreQty;
+      document.getElementById("stat-hombre-val").textContent =
+        `$ ${hombreVal.toLocaleString()}`;
+    }
+
+
+    function renderizarTabla(data) {
+      actualizarMetricas(data);
+      const tabla = document.getElementById("tablaCuerpo");
+      const contador = document.getElementById("contador");
+      tabla.innerHTML = "";
+      contador.textContent = data.length;
+
+      data.forEach((zapato) => {
+        const ganancia = zapato.precioVenta - zapato.costo;
+
+        // 1. Corregimos la ruta de la imagen (asegúrate que zapato.imagen traiga la ruta)
+        const imgHtml = zapato.imagen
+          ? `<img src="http://localhost:4000/uploads/${zapato.imagen}" alt="${zapato.referencia}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-sm">`
+          : `<div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-[10px] text-slate-400 font-bold border border-dashed border-slate-300">SIN FOTO</div>`;
+
+        tabla.innerHTML += `
+    <tr class="hover:bg-blue-50/50 transition-colors group">
+      <td class="p-5">
+        <div class="flex items-center gap-4">
+          ${imgHtml}
+          <div>
+            <span class="font-extrabold text-slate-900 block text-base">${zapato.referencia}</span>
+            <div class="flex flex-wrap gap-1 mt-1">
+              <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 font-bold uppercase">T: ${zapato.talla || "N/A"}</span>
+              <span class="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500 font-bold uppercase">H: ${zapato.tacon || "N/A"}</span>
+              <span class="text-[10px] bg-blue-50 px-1.5 py-0.5 rounded text-blue-600 font-bold uppercase">${zapato.color || "N/A"}</span>
+            </div>
+          </div>
+        </div>
+      </td>
+      
+      <td class="p-5 text-center">
+        <span class="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest
+          ${zapato.categoria === "Dama" ? "bg-pink-100 text-pink-600" : "bg-blue-100 text-blue-600"}">
+          ${zapato.categoria} ${zapato.categoria === "Dama" ? "💃" : "🕺"}
+        </span>
+      </td>
+
+      <td class="p-5 text-center">
+        <span class="font-extrabold text-slate-900 text-base ${zapato.stock < 3 ? "text-red-500" : ""}">${zapato.stock}</span>
+      </td>
+
+      <td class="p-5 text-center font-bold text-slate-400">
+        $${Number(zapato.costo).toLocaleString()}
+      </td>
+
+      <td class="p-5 text-center font-extrabold text-slate-900">
+        $${Number(zapato.precioVenta).toLocaleString()}
+      </td>
+
+      <td class="p-5 text-center">
+        <span class="font-bold ${ganancia > 0 ? "text-green-600" : "text-red-500"}">
+          $${ganancia.toLocaleString()}
+        </span>
+      </td>
+
+      <td class="p-5 text-right">
+        <div class="flex justify-end gap-2">
+          <button onclick="prepararEdicion(${zapato.id})" class="p-2.5 bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white rounded-xl transition-all shadow-sm">✏️</button>
+          <button onclick="eliminarZapato(${zapato.id})" class="p-2.5 bg-slate-100 text-slate-600 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-sm">🗑️</button>
+        </div>
+      </td>
+    </tr>
+    `;
+      });
+    }
+
+    function filtrarProductos() {
+      const termino = document.getElementById("buscador").value.toLowerCase();
+      const filtrados = productosCache.filter((p) =>
+        p.referencia.toLowerCase().includes(termino),
+      );
+      renderizarTabla(filtrados);
+    }
+
+    // Registrar nuevo zapato
+    document.getElementById("formZapato").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData();
+      // Añadimos los textos
+      formData.append("referencia", document.getElementById("ref").value);
+      formData.append("categoria", document.getElementById("cat").value);
+      formData.append("color", document.getElementById("color").value);
+      formData.append("talla", document.getElementById("talla").value);
+      formData.append("tacon", document.getElementById("tacon").value);
+      formData.append("costo", document.getElementById("costo").value);
+      formData.append("precioVenta", document.getElementById("precioVenta").value);
+      formData.append("stock", document.getElementById("cantidad").value);
+      formData.append("fechaRegistro", new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" }));
+
+      // Añadimos el archivo
+      const fotoInput = document.getElementById("foto");
+      if (fotoInput.files[0]) {
+        formData.append("imagen", fotoInput.files[0]);
+      }
+
+      const res = await fetch("http://localhost:4000/api/inventario", {
+        method: "POST",
+        body: formData // Importante: Sin Headers de Content-Type, el navegador lo pone solo
+      });
+
+      if (res.ok) {
+        obtenerZapatos();
+        e.target.reset();
+      }
+    });
+
+    // Preparar modal de edición con datos del zapato seleccionado
+    async function prepararEdicion(id) {
+      const z = productosCache.find((item) => item.id === id);
+      if (z) {
+        document.getElementById("editId").value = z.id;
+        document.getElementById("editRef").value = z.referencia;
+        document.getElementById("editColor").value = z.color;
+        document.getElementById("editTalla").value = z.talla;
+        document.getElementById("editTacon").value = z.tacon;
+        document.getElementById("editStock").value = z.stock;
+        document.getElementById("editCat").value = z.categoria;
+        document.getElementById("editCosto").value = z.costo;
+        document.getElementById("editPrecioVenta").value = z.precioVenta;
+        document.getElementById("modalEditar").style.display = "flex";
+      }
+    }
+
+    // Enviar actualización de zapato editado
+    document
+      .getElementById("formEditar")
+      .addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const id = document.getElementById("editId").value;
+        const datos = {
+          referencia: document.getElementById("editRef").value,
+          categoria: document.getElementById("editCat").value,
+          color: document.getElementById("editColor").value,
+          talla: document.getElementById("editTalla").value,
+          tacon: document.getElementById("editTacon").value,
+          stock: Number(document.getElementById("editStock").value),
+          costo: Number(document.getElementById("editCosto").value),
+          precioVenta: Number(
+            document.getElementById("editPrecioVenta").value,
+          ),
+        };
+
+        // Validación simple antes de enviar
+        const res = await fetch(
+          `http://localhost:4000/api/inventario/${id}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos),
+          },
+        );
+        if (res.ok) {
+          cerrarModal();
+          obtenerZapatos();
+        }
+      });
+
+    async function eliminarZapato(id) {
+      if (confirm("¿Eliminar definitivamente?")) {
+        await fetch(`http://localhost:4000/api/inventario/${id}`, {
+          method: "DELETE",
+        });
+        obtenerZapatos();
+      }
+    }
+
+    function cerrarModal() {
+      document.getElementById("modalEditar").style.display = "none";
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    function cargarInfoUsuario() {
+      const nombre = localStorage.getItem("userNombre") || "Invitado";
+      const inicial = nombre.charAt(0).toUpperCase();
+      document.getElementById("userNameDisplay").textContent = nombre;
+      document.getElementById("userInitial").textContent = inicial;
+    }
+
+    cargarInfoUsuario();
+    obtenerZapatos();
+  </script>
+</body>
+
+</html>

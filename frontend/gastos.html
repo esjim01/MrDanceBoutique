@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gastos de Negocio | Mr. Dance Boutique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .custom-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="text-slate-800">
+    <nav class="header-gradient text-white px-8 py-4 shadow-xl flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center gap-3">
+            <img src="assets/Logo_Mr_Dance_S_White.png" alt="Mr. Dance Boutique" class="w-auto h-10 object-contain"
+                onerror="this.src='https://via.placeholder.com/40x40?text=MD'" />
+            <h1 class="font-extrabold text-xl tracking-tight">MR. DANCE <span
+                    class="text-blue-400 font-light">BOUTIQUE</span></h1>
+        </div>
+        <button onclick="logout()"
+            class="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/50 px-5 py-1.5 rounded-lg text-sm font-bold transition-all">
+            SALIR
+        </button>
+    </nav>
+
+    <div class="flex h-screen overflow-hidden bg-slate-50">
+        <aside class="w-60 bg-[#fffff] text-white flex flex-col flex-shrink-0 shadow-2xl">
+            <nav class="flex-1 p-4 space-y-1 mt-4">
+                <a href="inventario.html"
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                    <span>📈</span> Inventario
+                </a>
+                <a href="gastos.html"
+                    class="flex items-center gap-3 bg-slate-800 text-white px-4 py-3 rounded-xl font-bold text-sm transition-all border-l-4 border-blue-500">
+                    <span>💰</span> Gastos
+                </a>
+                <a href="ventas.html" 
+                class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                    <span>🛍️</span> Punto de Venta
+                </a>
+                <a href="reportes.html"
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                    <span>📊</span> Reportes
+                </a>
+                <a href="gastos_hogar.html"
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                    <span>🏠</span> Gastos Hogar
+                </a>
+            </nav>
+
+            <!-- Usuario en sidebar -->
+            <div class="p-4 border-t border-slate-800 bg-[#0a0f1d]">
+                <div class="flex items-center gap-3 p-2">
+                    <div
+                        class="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center font-bold text-lg shadow-inner">
+                        <span id="userInitial">A</span>
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                        <p id="userNameDisplay" class="font-bold text-sm truncate uppercase tracking-tight">
+                            Cargando...
+                        </p>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+                            Administrador
+                        </p>
+                    </div>
+                    <button onclick="logout()" class="text-slate-500 hover:text-red-400 transition-colors">
+                        🚪
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <main class="flex-1 overflow-y-auto p-8">
+                <div class="max-w-[1400px] mx-auto space-y-8">
+
+                    <div
+                        class="flex flex-col md:flex-row justify-between items-end gap-4 bg-white p-6 rounded-2xl border border-slate-200 custom-shadow">
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-slate-900 uppercase tracking-tighter">Registro de
+                                Gastos Operativos</h2>
+                            <p class="text-sm font-bold text-slate-400">Control de finanzas de la Boutique</p>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                            <span class="text-lg">📅</span>
+                            <div class="flex flex-col">
+                                <label class="text-[9px] font-black uppercase text-slate-400 tracking-widest">Filtro
+                                    Temporal</label>
+                                <input type="month" id="mesFiltro" onchange="aplicarFiltroMes()"
+                                    class="bg-transparent font-bold text-slate-700 outline-none text-sm cursor-pointer" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <hr class="border-t-2 border-blue-600 w-8 mb-4" />
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Gastos (Mes)</p>
+                            <div class="mt-2">
+                                <span id="stat-total-gastos" class="text-3xl font-extrabold text-slate-900">$ 0</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <hr class="border-t-2 border-red-500 w-8 mb-4" />
+                            <p class="text-[10px] font-bold text-red-500 uppercase tracking-wider">Top 1 Gasto</p>
+                            <p id="top1-cat" class="text-sm font-bold text-slate-600 truncate mt-1">Sin Datos</p>
+                            <div class="mt-1">
+                                <span id="top1-val" class="text-xl font-extrabold text-slate-900">$ 0</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <hr class="border-t-2 border-orange-400 w-8 mb-4" />
+                            <p class="text-[10px] font-bold text-orange-400 uppercase tracking-wider">Top 2 Gasto</p>
+                            <p id="top2-cat" class="text-sm font-bold text-slate-600 truncate mt-1">Sin Datos</p>
+                            <div class="mt-1">
+                                <span id="top2-val" class="text-xl font-extrabold text-slate-900">$ 0</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <hr class="border-t-2 border-emerald-500 w-8 mb-4" />
+                            <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-wider">Top 3 Gasto</p>
+                            <p id="top3-cat" class="text-sm font-bold text-slate-600 truncate mt-1">Sin Datos</p>
+                            <div class="mt-1">
+                                <span id="top3-val" class="text-xl font-extrabold text-slate-900">$ 0</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bg-white rounded-2xl p-8 custom-shadow border border-slate-200">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="h-8 w-2 bg-blue-600 rounded-full"></div>
+                            <h2 class="text-xl font-extrabold text-slate-900 uppercase tracking-tighter">Registrar Nuevo
+                                Gasto</h2>
+                        </div>
+
+                        <form id="formGasto" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+                            <div class="space-y-2 lg:col-span-2">
+                                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Concepto /
+                                    Descripción</label>
+                                <input type="text" id="concepto"
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+                                    placeholder="Ej: Pago de Luz Abril" required />
+                            </div>
+
+                            <div class="space-y-2 lg:col-span-1">
+                                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Categoría</label>
+                                <select id="categoria"
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+                                    required>
+                                    <option value="" disabled selected>Seleccionar...</option>
+                                    <option value="Servicios Públicos">Servicios Públicos</option>
+                                    <option value="Nómina">Nómina</option>
+                                    <option value="Publicidad">Publicidad</option>
+                                    <option value="Insumos">Insumos</option>
+                                    <option value="Arriendo">Arriendo</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-2 lg:col-span-1">
+                                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Fecha de Gasto</label>
+                                <input type="date" id="fechaGasto"
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+                                    required />
+                            </div>
+
+                            <div class="space-y-2 lg:col-span-1">
+                                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Valor Total ($)</label>
+                                <input type="number" id="valor"
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
+                                    placeholder="0.00" required />
+                            </div>
+
+                            <div class="space-y-2 lg:col-span-2">
+                                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Adjuntar Recibo <span
+                                        class="text-slate-400 text-[10px]">(Opcional)</span></label>
+                                <input type="file" id="recibo" accept="image/*,.pdf"
+                                    class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                            </div>
+
+                            <div class="flex items-end">
+                                <button type="submit"
+                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95">
+                                    REGISTRAR GASTO
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div
+                            class="p-6 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                            <div class="relative w-full md:w-96">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                                <input type="text" id="buscadorGastos" onkeyup="filtrarPorBusqueda()"
+                                    placeholder="Buscar por concepto..."
+                                    class="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none transition shadow-sm" />
+                            </div>
+                            <div class="flex gap-4">
+                                <span
+                                    class="bg-white px-4 py-2 rounded-lg border border-slate-200 text-sm font-bold text-slate-600 shadow-sm">
+                                    TOTAL REGISTROS: <span id="contadorGastos" class="text-blue-600">0</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="sticky top-0 bg-slate-800 text-white z-20">
+                                    <tr>
+                                        <th class="p-5 font-bold uppercase text-xs tracking-wider">Fecha</th>
+                                        <th class="p-5 font-bold uppercase text-xs tracking-wider">Concepto</th>
+                                        <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">Categoría
+                                        </th>
+                                        <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">Valor
+                                            Total</th>
+                                        <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">Recibo
+                                        </th>
+                                        <th class="p-5 font-bold uppercase text-xs tracking-wider text-right">Acciones
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaGastosCuerpo" class="divide-y divide-slate-100"></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="modalEditar" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-extrabold text-slate-900 uppercase tracking-tight">Editar Gasto</h2>
+                <button onclick="cerrarModal()" class="text-slate-400 hover:text-red-500 font-bold text-2xl transition-colors">&times;</button>
+            </div>
+            <form id="formEditarGasto" class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-500 ml-1">Concepto</label>
+                    <input type="text" id="editConcepto" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                </div>
+                <div>
+                    <label class="text-xs font-bold uppercase text-slate-500 ml-1">Categoría</label>
+                    <select id="editCategoria" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                        <option value="Servicios Públicos">Servicios Públicos</option>
+                        <option value="Nómina">Nómina</option>
+                        <option value="Publicidad">Publicidad</option>
+                        <option value="Insumos">Insumos</option>
+                        <option value="Arriendo">Arriendo</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-500 ml-1">Fecha</label>
+                        <input type="date" id="editFechaGasto" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold uppercase text-slate-500 ml-1">Valor</label>
+                        <input type="number" id="editValor" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95">
+                        GUARDAR CAMBIOS
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let gastosCache = []; // Almacena todos los gastos crudos de la BD
+        let gastosFiltrados = []; // Almacena los gastos después de aplicar mes y búsqueda
+
+        // 1. Inicializar fecha por defecto en el filtro y formulario
+        function inicializarFechas() {
+            const hoy = new Date();
+            // Formato YYYY-MM-DD para el input date
+            const añoMesDia = hoy.toISOString().split('T')[0];
+            document.getElementById('fechaGasto').value = añoMesDia;
+
+            // Formato YYYY-MM para el filtro temporal
+            const añoMes = hoy.toISOString().slice(0, 7);
+            document.getElementById('mesFiltro').value = añoMes;
+        }
+
+        // 2. Obtener datos (Simulado hasta que crees la ruta en el backend)
+        async function obtenerGastos() {
+            try {
+                // Ya tienes el backend listo, así que usamos el fetch real:
+                const res = await fetch("http://localhost:4000/api/gastos");
+                gastosCache = await res.json();
+
+                aplicarFiltroMes(); // Filtra y renderiza
+            } catch (err) {
+                console.error("Error cargando gastos:", err);
+            }
+        }
+
+        // 3. Lógica de Filtros (Mes y Buscador)
+        function aplicarFiltroMes() {
+            const mesSeleccionado = document.getElementById('mesFiltro').value; // "YYYY-MM"
+            const busqueda = document.getElementById("buscadorGastos").value.toLowerCase();
+
+            gastosFiltrados = gastosCache.filter(g => {
+                // Filtrar por mes (asumiendo que g.fechaGasto es "YYYY-MM-DD")
+                const coincideMes = mesSeleccionado ? g.fechaGasto.startsWith(mesSeleccionado) : true;
+                // Filtrar por texto
+                const coincideTexto = g.concepto.toLowerCase().includes(busqueda);
+
+                return coincideMes && coincideTexto;
+            });
+
+            renderizarTablaGastos(gastosFiltrados);
+        }
+
+        function filtrarPorBusqueda() {
+            aplicarFiltroMes(); // Reutilizamos la función para que aplique ambos filtros a la vez
+        }
+
+        // 4. Actualizar Métricas Top 3
+        function actualizarMetricasGastos(gastos) {
+            let total = 0;
+            const categoriasSuma = {};
+
+            // Sumarizamos por categoría
+            gastos.forEach(g => {
+                const valor = Number(g.valor) || 0;
+                total += valor;
+                if (!categoriasSuma[g.categoria]) {
+                    categoriasSuma[g.categoria] = 0;
+                }
+                categoriasSuma[g.categoria] += valor;
+            });
+
+            // Convertimos el objeto a array y ordenamos de mayor a menor
+            const ranking = Object.entries(categoriasSuma)
+                .sort((a, b) => b[1] - a[1]); // b[1] es el valor
+
+            // Actualizamos UI
+            document.getElementById("stat-total-gastos").textContent = `$ ${total.toLocaleString()}`;
+
+            // Top 1
+            document.getElementById("top1-cat").textContent = ranking[0] ? ranking[0][0] : "Sin Datos";
+            document.getElementById("top1-val").textContent = ranking[0] ? `$ ${ranking[0][1].toLocaleString()}` : "$ 0";
+
+            // Top 2
+            document.getElementById("top2-cat").textContent = ranking[1] ? ranking[1][0] : "Sin Datos";
+            document.getElementById("top2-val").textContent = ranking[1] ? `$ ${ranking[1][1].toLocaleString()}` : "$ 0";
+
+            // Top 3
+            document.getElementById("top3-cat").textContent = ranking[2] ? ranking[2][0] : "Sin Datos";
+            document.getElementById("top3-val").textContent = ranking[2] ? `$ ${ranking[2][1].toLocaleString()}` : "$ 0";
+        }
+
+        // 5. Renderizar Tabla
+        function renderizarTablaGastos(data) {
+            actualizarMetricasGastos(data);
+            const tabla = document.getElementById("tablaGastosCuerpo");
+            document.getElementById("contadorGastos").textContent = data.length;
+            tabla.innerHTML = "";
+
+            if (data.length === 0) {
+                tabla.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 font-bold">No hay gastos registrados en este periodo.</td></tr>`;
+                return;
+            }
+
+            data.forEach((gasto) => {
+                // Estructura visual para el recibo adjunto
+                const badgeRecibo = gasto.recibo
+                    ? `<a href="http://localhost:4000/uploads/${gasto.recibo}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition">📄 Ver Recibo</a>`
+                    : `<span class="text-[10px] font-bold text-slate-300 uppercase">Sin soporte</span>`;
+
+                // Colores por categoría (opcional para diseño)
+                let bgBadge = "bg-slate-100 text-slate-600";
+                if (gasto.categoria === "Servicios Públicos") bgBadge = "bg-blue-100 text-blue-600";
+                if (gasto.categoria === "Nómina") bgBadge = "bg-purple-100 text-purple-600";
+                if (gasto.categoria === "Publicidad") bgBadge = "bg-pink-100 text-pink-600";
+                if (gasto.categoria === "Arriendo") bgBadge = "bg-orange-100 text-orange-600";
+
+                tabla.innerHTML += `
+          <tr class="hover:bg-blue-50/50 transition-colors border-b border-slate-100">
+            <td class="p-5 font-bold text-slate-500 text-sm">${gasto.fechaGasto}</td>
+            <td class="p-5">
+              <span class="font-extrabold text-slate-900 block text-base">${gasto.concepto}</span>
+            </td>
+            <td class="p-5 text-center">
+              <span class="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${bgBadge}">
+                ${gasto.categoria}
+              </span>
+            </td>
+            <td class="p-5 text-center font-extrabold text-red-500">
+              $${Number(gasto.valor).toLocaleString()}
+            </td>
+            <td class="p-5 text-center">
+              ${badgeRecibo}
+            </td>
+            <td class="p-5 text-right">
+              <div class="flex justify-end gap-2">
+                <button onclick="editarGasto(${gasto.id})" class="p-2.5 bg-slate-100 text-slate-600 hover:bg-blue-600 hover:text-white rounded-xl transition-all shadow-sm">✏️</button>
+                <button onclick="eliminarGasto(${gasto.id})" class="p-2.5 bg-slate-100 text-slate-600 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-sm">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+            });
+        }
+
+        // 6. Enviar Formulario
+        document.getElementById("formGasto").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Usamos FormData porque hay un archivo (recibo) opcional
+            const formData = new FormData();
+            formData.append("concepto", document.getElementById("concepto").value);
+            formData.append("categoria", document.getElementById("categoria").value);
+            formData.append("fechaGasto", document.getElementById("fechaGasto").value);
+            formData.append("valor", document.getElementById("valor").value);
+
+            const reciboInput = document.getElementById("recibo");
+            if (reciboInput.files[0]) {
+                formData.append("recibo", reciboInput.files[0]);
+            }
+
+            try {
+                const res = await fetch("http://localhost:4000/api/gastos", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (res.ok) {
+                    obtenerGastos();
+                    document.getElementById("formGasto").reset();
+                    inicializarFechas(); // Restaurar fecha de hoy
+                }
+            } catch (err) {
+                console.error("Error al guardar gasto:", err);
+                alert("Asegúrate de haber creado las rutas de /api/gastos en el backend.");
+            }
+        });
+
+        // --- LOGICA DE EDICION ---
+        let gastoEditandoId = null; // Guardamos temporalmente el ID del gasto a editar
+
+        function editarGasto(id) {
+            // Buscamos en gastosCache en lugar de productosCache
+            const g = gastosCache.find((item) => item.id === id);
+            if (g) {
+                gastoEditandoId = id;
+                document.getElementById("editConcepto").value = g.concepto;
+                document.getElementById("editCategoria").value = g.categoria;
+                document.getElementById("editFechaGasto").value = g.fechaGasto;
+                document.getElementById("editValor").value = g.valor;                
+                
+                document.getElementById("modalEditar").style.display = "flex";
+            }
+        }
+
+        function cerrarModal() {
+            document.getElementById("modalEditar").style.display = "none";
+            gastoEditandoId = null;
+        }
+
+        document.getElementById("formEditarGasto").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            if (!gastoEditandoId) return;
+
+            const datosEditados = {
+                concepto: document.getElementById("editConcepto").value,
+                categoria: document.getElementById("editCategoria").value,
+                fechaGasto: document.getElementById("editFechaGasto").value,
+                valor: Number(document.getElementById("editValor").value)
+            };
+
+            try {
+                const res = await fetch(`http://localhost:4000/api/gastos/${gastoEditandoId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(datosEditados)
+                });
+
+                if (res.ok) {
+                    cerrarModal();
+                    obtenerGastos(); // Recarga la tabla y los Top 3 con los nuevos datos
+                }
+            } catch (err) {
+                console.error("Error al actualizar gasto:", err);
+            }
+        });
+
+
+        // 7. Eliminar Gasto
+        async function eliminarGasto(id) {
+            if (confirm("¿Estás seguro de eliminar este gasto? El recibo físico también se borrará.")) {
+                try {
+                    await fetch(`http://localhost:4000/api/gastos/${id}`, { method: "DELETE" });
+                    obtenerGastos();
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        function cargarInfoUsuario() {
+            const nombre = localStorage.getItem("userNombre") || "Invitado";
+            const inicial = nombre.charAt(0).toUpperCase();
+            document.getElementById("userNameDisplay").textContent = nombre;
+            document.getElementById("userInitial").textContent = inicial;
+        }
+
+        // Al iniciar la página
+        inicializarFechas();
+        obtenerGastos();
+        cargarInfoUsuario();
+    </script>
+</body>
+
+</html>
