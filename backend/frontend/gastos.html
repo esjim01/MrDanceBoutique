@@ -29,7 +29,7 @@
         <div class="flex items-center gap-3">
             <img src="assets/Logo_Mr_Dance_S_White.png" alt="Mr. Dance Boutique" class="w-auto h-10 object-contain"
                 onerror="this.src='https://via.placeholder.com/40x40?text=MD'" />
-            <h1 class="font-extrabold text-xl tracking-tight">MR. DANCE <span
+            <h1 class="font-extrabold text-xl tracking-tight hidden sm:block">MR. DANCE <span
                     class="text-blue-400 font-light">BOUTIQUE</span></h1>
         </div>
         <button onclick="logout()"
@@ -38,33 +38,33 @@
         </button>
     </nav>
 
-    <div class="flex h-screen overflow-hidden bg-slate-50">
-        <aside class="w-60 bg-[#fffff] text-white flex flex-col flex-shrink-0 shadow-2xl">
-            <nav class="flex-1 p-4 space-y-1 mt-4">
+    <div class="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50">
+        <aside class="w-full md:w-60 bg-slate-900 text-white flex flex-col flex-shrink-0 shadow-2xl z-20">
+            <nav
+                class="flex flex-row md:flex-col p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-1 md:mt-4 overflow-x-auto whitespace-nowrap">
                 <a href="inventario.html"
-                    class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all">
                     <span>📈</span> Inventario
                 </a>
                 <a href="gastos.html"
-                    class="flex items-center gap-3 bg-slate-800 text-white px-4 py-3 rounded-xl font-bold text-sm transition-all border-l-4 border-blue-500">
+                    class="flex items-center gap-3 bg-slate-800 text-white px-4 py-3 rounded-xl font-bold text-sm transition-all border-b-4 md:border-b-0 md:border-l-4 border-blue-500">
                     <span>💰</span> Gastos
                 </a>
-                <a href="ventas.html" 
-                class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                <a href="ventas.html"
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all">
                     <span>🛍️</span> Punto de Venta
                 </a>
                 <a href="reportes.html"
-                    class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all">
                     <span>📊</span> Reportes
                 </a>
                 <a href="gastos_hogar.html"
-                    class="flex items-center gap-3 text-slate-500 hover:text-slate-900 hover:bg-slate-100 px-4 py-3 rounded-xl font-bold text-sm transition-all">
+                    class="flex items-center gap-3 text-slate-500 hover:text-slate-300 hover:bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all">
                     <span>🏠</span> Gastos Hogar
                 </a>
             </nav>
 
-            <!-- Usuario en sidebar -->
-            <div class="p-4 border-t border-slate-800 bg-[#0a0f1d]">
+            <div class="hidden md:block p-4 border-t border-slate-800 bg-[#0a0f1d]">
                 <div class="flex items-center gap-3 p-2">
                     <div
                         class="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center font-bold text-lg shadow-inner">
@@ -84,6 +84,7 @@
                 </div>
             </div>
         </aside>
+
 
 
         <div class="flex flex-col flex-1 overflow-hidden">
@@ -245,20 +246,26 @@
         </div>
     </div>
 
-    <div id="modalEditar" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50">
+    <div id="modalEditar"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden items-center justify-center z-50">
         <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-extrabold text-slate-900 uppercase tracking-tight">Editar Gasto</h2>
-                <button onclick="cerrarModal()" class="text-slate-400 hover:text-red-500 font-bold text-2xl transition-colors">&times;</button>
+                <button onclick="cerrarModal()"
+                    class="text-slate-400 hover:text-red-500 font-bold text-2xl transition-colors">&times;</button>
             </div>
             <form id="formEditarGasto" class="space-y-4">
                 <div>
                     <label class="text-xs font-bold uppercase text-slate-500 ml-1">Concepto</label>
-                    <input type="text" id="editConcepto" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                    <input type="text" id="editConcepto"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm"
+                        required>
                 </div>
                 <div>
                     <label class="text-xs font-bold uppercase text-slate-500 ml-1">Categoría</label>
-                    <select id="editCategoria" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                    <select id="editCategoria"
+                        class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm"
+                        required>
                         <option value="Servicios Públicos">Servicios Públicos</option>
                         <option value="Nómina">Nómina</option>
                         <option value="Publicidad">Publicidad</option>
@@ -267,18 +274,23 @@
                         <option value="Otros">Otros</option>
                     </select>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="text-xs font-bold uppercase text-slate-500 ml-1">Fecha</label>
-                        <input type="date" id="editFechaGasto" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                        <input type="date" id="editFechaGasto"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm"
+                            required>
                     </div>
                     <div>
                         <label class="text-xs font-bold uppercase text-slate-500 ml-1">Valor</label>
-                        <input type="number" id="editValor" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm" required>
+                        <input type="number" id="editValor"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm"
+                            required>
                     </div>
                 </div>
                 <div class="mt-6">
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95">
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95">
                         GUARDAR CAMBIOS
                     </button>
                 </div>
@@ -306,7 +318,7 @@
         async function obtenerGastos() {
             try {
                 // Ya tienes el backend listo, así que usamos el fetch real:
-                const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/gastos");
+                const res = await fetch("/api/gastos");
                 gastosCache = await res.json();
 
                 aplicarFiltroMes(); // Filtra y renderiza
@@ -386,7 +398,7 @@
             data.forEach((gasto) => {
                 // Estructura visual para el recibo adjunto
                 const badgeRecibo = gasto.recibo
-                    ? `<a href="https://app.mrdanceboutique.com/uploads/${gasto.recibo}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition">📄 Ver Recibo</a>`
+                    ? `<a href="/uploads/${gasto.recibo}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-emerald-100 transition">📄 Ver Recibo</a>`
                     : `<span class="text-[10px] font-bold text-slate-300 uppercase">Sin soporte</span>`;
 
                 // Colores por categoría (opcional para diseño)
@@ -441,7 +453,7 @@
             }
 
             try {
-                const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/gastos", {
+                const res = await fetch("/api/gastos", {
                     method: "POST",
                     body: formData
                 });
@@ -468,8 +480,8 @@
                 document.getElementById("editConcepto").value = g.concepto;
                 document.getElementById("editCategoria").value = g.categoria;
                 document.getElementById("editFechaGasto").value = g.fechaGasto;
-                document.getElementById("editValor").value = g.valor;                
-                
+                document.getElementById("editValor").value = g.valor;
+
                 document.getElementById("modalEditar").style.display = "flex";
             }
         }
@@ -491,7 +503,7 @@
             };
 
             try {
-                const res = await fetch(`https://mrdanceboutique.mrtangoshoes.com/api/gastos/${gastoEditandoId}`, {
+                const res = await fetch(`/api/gastos/${gastoEditandoId}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(datosEditados)
@@ -511,7 +523,7 @@
         async function eliminarGasto(id) {
             if (confirm("¿Estás seguro de eliminar este gasto? El recibo físico también se borrará.")) {
                 try {
-                    await fetch(`https://mrdanceboutique.mrtangoshoes.com/api/gastos/${id}`, { method: "DELETE" });
+                    await fetch(`/api/gastos/${id}`, { method: "DELETE" });
                     obtenerGastos();
                 } catch (err) {
                     console.error(err);

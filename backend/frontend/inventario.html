@@ -31,7 +31,7 @@
   <nav class="header-gradient text-white px-8 py-4 shadow-xl flex justify-between items-center flex-shrink-0">
     <div class="flex items-center gap-3">
       <img src="assets/Logo_Mr_Dance_S_White.png" alt="Mr. Dance Boutique" class="w-auto h-10 object-contain" />
-      <h1 class="font-extrabold text-xl tracking-tight">
+      <h1 class="font-extrabold text-xl tracking-tight hidden sm:block">
         MR. DANCE <span class="text-blue-400 font-light">BOUTIQUE</span>
       </h1>
     </div>
@@ -42,11 +42,11 @@
   </nav>
 
   <!-- ✅ LAYOUT PRINCIPAL: flex ocupa toda la altura de la pantalla -->
-  <div class="flex h-screen overflow-hidden bg-slate-50">
+  <div class="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50">
     <!-- ========== SIDEBAR ========== -->
-    <aside class="w-60 bg-[#fffff] text-white flex flex-col flex-shrink-0 shadow-2xl">
+    <aside class="w-full md:w-60 bg-slate-900 text-white flex flex-col flex-shrink-0 shadow-2xl z-20">
       <!-- Navegación -->
-      <nav class="flex-1 p-4 space-y-1 mt-4">
+      <nav class="flex flex-row md:flex-col p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-1 md:mt-4 overflow-x-auto whitespace-nowrap">
         <a href="#"
           class="flex items-center gap-3 bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all border-l-4 border-blue-500">
           <span>📈</span> Inventario
@@ -70,7 +70,7 @@
       </nav>
 
       <!-- Usuario en sidebar -->
-      <div class="p-4 border-t border-slate-800 bg-[#0a0f1d]">
+      <div class="hidden md:block p-4 border-t border-slate-800 bg-[#0a0f1d]">
         <div class="flex items-center gap-3 p-2">
           <div class="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center font-bold text-lg shadow-inner">
             <span id="userInitial">A</span>
@@ -412,7 +412,7 @@
 
     async function obtenerZapatos() {
       try {
-        const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/inventario");
+        const res = await fetch("/api/inventario");
         productosCache = await res.json();
         renderizarTabla(productosCache);
       } catch (err) {
@@ -466,7 +466,7 @@
 
         // 1. Corregimos la ruta de la imagen (asegúrate que zapato.imagen traiga la ruta)
         const imgHtml = zapato.imagen
-          ? `<img src="https://mrdanceboutique.mrtangoshoes.com/uploads/${zapato.imagen}" alt="${zapato.referencia}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-sm">`
+          ? `<img src="/uploads/${zapato.imagen}" alt="${zapato.referencia}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-sm">`
           : `<div class="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center text-[10px] text-slate-400 font-bold border border-dashed border-slate-300">SIN FOTO</div>`;
 
         tabla.innerHTML += `
@@ -551,7 +551,7 @@
         formData.append("imagen", fotoInput.files[0]);
       }
 
-      const res = await fetch("https://mrdanceboutique.mrtangoshoes.com/api/inventario", {
+      const res = await fetch("/api/inventario", {
         method: "POST",
         body: formData // Importante: Sin Headers de Content-Type, el navegador lo pone solo
       });
@@ -600,7 +600,7 @@
 
         // Validación simple antes de enviar
         const res = await fetch(
-          `https://mrdanceboutique.mrtangoshoes.com/api/inventario/${id}`,
+          `/api/inventario/${id}`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -615,7 +615,7 @@
 
     async function eliminarZapato(id) {
       if (confirm("¿Eliminar definitivamente?")) {
-        await fetch(`https://mrdanceboutique.mrtangoshoes.com/api/inventario/${id}`, {
+        await fetch(`/api/inventario/${id}`, {
           method: "DELETE",
         });
         obtenerZapatos();
