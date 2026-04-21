@@ -45,6 +45,8 @@ export const createZapato = async (req, res) => {
             talla: req.body.talla, 
             color: req.body.color,
             tacon: req.body.tacon || "N/A",
+            suela: req.body.suela || "N/A",
+            ancho: req.body.ancho || "N/A",
             costo: Number(req.body.costo),
             precioVenta: Number(req.body.precioVenta),
             stock: Number(req.body.stock) || 0,

@@ -102,7 +102,8 @@
         </aside>
 
         <main class="flex-1 flex flex-col overflow-hidden relative">
-            <div class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 z-20">
+            <div
+                class="bg-white border-b border-slate-200 px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 z-20">
                 <div>
                     <h2 class="text-2xl font-extrabold text-slate-900 uppercase tracking-tighter">Vitrina de Productos /
                         Historial de Ventas</h2>
@@ -377,7 +378,7 @@
                 return;
             }
             productos.forEach(p => {
-                const img = p.imagen ? `https://mrdanceboutique.mrtangoshoes.com/uploads/${p.imagen}` : 'https://via.placeholder.com/300?text=Sin+Foto';
+                const img = p.imagen ? `/uploads/${p.imagen}` : 'https://via.placeholder.com/300?text=Sin+Foto';
                 const agotado = Number(p.stock) === 0;
                 const cardClass = agotado ? "opacity-60 grayscale cursor-not-allowed" : "hover:-translate-y-1 hover:shadow-xl cursor-pointer";
                 const badgeAgotado = agotado ? `<div class="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex items-center justify-center z-10"><span class="bg-red-600 text-white font-black px-4 py-2 rounded-lg tracking-widest uppercase border-2 border-white shadow-2xl transform -rotate-12 text-sm">Agotado</span></div>` : '';
@@ -395,9 +396,16 @@
                                 <h3 class="font-extrabold text-slate-900 leading-tight">${p.referencia}</h3>
                                 <span class="text-blue-600 font-black text-sm">$${Number(p.precioVenta).toLocaleString()}</span>
                             </div>
+
                             <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex gap-2">
-                                <span>Talla: ${p.talla}</span> ${p.categoria === 'Dama' ? `<span>• Tacón: ${p.tacon}</span>` : ''}
+                                <span>Talla: ${p.talla} </span> 
+                                <span>Suela: ${p.suela} </span>
+                                <span>Tacón: ${Number(p.tacon).toFixed(2)}</span>
+                                <span>Ancho: ${p.ancho} </span>                                
                             </p>
+
+                            
+
                         </div>
                     </div>`;
             });
@@ -483,7 +491,7 @@
             }
 
             carrito.forEach((item, index) => {
-                const img = item.imagen ? `http://localhost:4000/uploads/${item.imagen}` : 'https://via.placeholder.com/100';
+                const img = item.imagen ? `/uploads/${item.imagen}` : 'https://via.placeholder.com/100';
                 contenedor.innerHTML += `
                     <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex gap-3 relative">
                         <img src="${img}" class="w-16 h-16 object-cover rounded-lg bg-slate-100 border border-slate-200">

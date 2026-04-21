@@ -165,10 +165,12 @@
                                     class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm"
                                     required>
                                     <option value="" disabled selected>Seleccionar...</option>
+                                    <option value="Envios">Envios</option>
                                     <option value="Servicios Públicos">Servicios Públicos</option>
                                     <option value="Nómina">Nómina</option>
                                     <option value="Publicidad">Publicidad</option>
                                     <option value="Insumos">Insumos</option>
+                                    <option value="Insumos">Insumos</option>                                    
                                     <option value="Arriendo">Arriendo</option>
                                     <option value="Otros">Otros</option>
                                 </select>
@@ -266,11 +268,13 @@
                     <select id="editCategoria"
                         class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-sm"
                         required>
+                        
                         <option value="Servicios Públicos">Servicios Públicos</option>
                         <option value="Nómina">Nómina</option>
                         <option value="Publicidad">Publicidad</option>
                         <option value="Insumos">Insumos</option>
                         <option value="Arriendo">Arriendo</option>
+                        <option value="Envios">Envios</option>
                         <option value="Otros">Otros</option>
                     </select>
                 </div>
@@ -405,9 +409,11 @@
                 let bgBadge = "bg-slate-100 text-slate-600";
                 if (gasto.categoria === "Servicios Públicos") bgBadge = "bg-blue-100 text-blue-600";
                 if (gasto.categoria === "Nómina") bgBadge = "bg-purple-100 text-purple-600";
+                if (gasto.categoria === "Insumos") bgBadge = "bg-green-100 text-green-600";
                 if (gasto.categoria === "Publicidad") bgBadge = "bg-pink-100 text-pink-600";
                 if (gasto.categoria === "Arriendo") bgBadge = "bg-orange-100 text-orange-600";
-
+                if (gasto.categoria === "Envios") bgBadge = "bg-yellow-100 text-yellow-600";
+                if (gasto.categoria === "Otros") bgBadge = "bg-slate-100 text-slate-600";
                 tabla.innerHTML += `
           <tr class="hover:bg-blue-50/50 transition-colors border-b border-slate-100">
             <td class="p-5 font-bold text-slate-500 text-sm">${gasto.fechaGasto}</td>

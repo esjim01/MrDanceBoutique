@@ -46,7 +46,8 @@
     <!-- ========== SIDEBAR ========== -->
     <aside class="w-full md:w-60 bg-slate-900 text-white flex flex-col flex-shrink-0 shadow-2xl z-20">
       <!-- Navegación -->
-      <nav class="flex flex-row md:flex-col p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-1 md:mt-4 overflow-x-auto whitespace-nowrap">
+      <nav
+        class="flex flex-row md:flex-col p-2 md:p-4 space-x-2 md:space-x-0 md:space-y-1 md:mt-4 overflow-x-auto whitespace-nowrap">
         <a href="#"
           class="flex items-center gap-3 bg-slate-800 px-4 py-3 rounded-xl font-bold text-sm transition-all border-l-4 border-blue-500">
           <span>📈</span> Inventario
@@ -180,31 +181,61 @@
                   <option value="7">7 cm</option>
                   <option value="7.5">7.5 cm</option>
                   <option value="8">8 cm</option>
+                  <option value="8.5">8.5 cm</option>
                 </select>
               </div>
 
               <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Ancho</label>
+                <select type="text" id="ancho"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm">
+                  <option value="" disabled selected>Selec. Ancho</option>
+                  <option value="2A (AA)">2A (AA)</option>
+                  <option value="A">A</option>
+                  <option value="B">B (Mediano)</option>
+                  <option value="C">C</option>
+                  <option value="D">D (Ancho)</option>
+                  <option value="E">E</option>
+                  <option value="EE">EE</option>
+                  <option value="EEE">EEE</option>
+                </select>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-xs font-bold uppercase text-slate-500 ml-1">Tipo de Suela</label>
+                <select type="text" id="suela"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm">
+                  <option value="" disabled selected>Selec. Tipo suela</option>
+                  <option value="Cuero">Cuero</option>
+                  <option value="Carnaza">Carnaza</option>
+                  <option value="Goma">Goma</option>
+                </select>
+              </div>
+
+
+
+              <div class="space-y-2">
                 <label class="text-xs font-bold uppercase text-slate-500 ml-1">Stock</label>
                 <input type="number" id="cantidad"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 transition outline-none font-semibold"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm"
                   placeholder="0" required />
               </div>
               <div class="space-y-2">
                 <label class="text-xs font-bold uppercase text-slate-500 ml-1">Costo Inversión</label>
                 <input type="number" id="costo"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 transition outline-none font-semibold"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm"
                   placeholder="$ 0.00" required />
               </div>
-              <div class="space-y-2 lg:col-span-2">
+              <div class="space-y-2">
                 <label class="text-xs font-bold uppercase text-slate-500 ml-1">Precio Venta</label>
                 <input type="number" id="precioVenta"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 focus:ring-2 focus:ring-blue-500 transition outline-none font-semibold"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 transition outline-none font-bold text-sm"
                   placeholder="$ 0.00" required />
               </div>
               <div class="space-y-2 lg:col-span-2">
                 <label class="text-xs font-bold uppercase text-slate-500 ml-1">Cargar Foto</label>
                 <input type="file" id="foto" accept="image/*"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                  class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-bold text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
               </div>
               <div class="flex items-end">
                 <button type="submit"
@@ -301,6 +332,12 @@
                       Referencia / Detalles
                     </th>
                     <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
+                      Suela
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
+                      Ancho
+                    </th>
+                    <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
                       Categoría
                     </th>
                     <th class="p-5 font-bold uppercase text-xs tracking-wider text-center">
@@ -366,14 +403,84 @@
 
           <div class="col-span-1 space-y-1">
             <label class="text-[10px] font-black uppercase text-slate-400">Talla</label>
-            <input type="text" id="editTalla"
-              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm" />
+            <select type="text" id="editTalla"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
+                  <option value="30">30</option>
+                  <option value="30.5">30.5</option>
+                  <option value="31">31</option>
+                  <option value="31.5">31.5</option>
+                  <option value="32">32</option>
+                  <option value="32.5">32.5</option>
+                  <option value="33">33</option>
+                  <option value="33.5">33.5</option>
+                  <option value="34">34</option>
+                  <option value="34.5">34.5</option>
+                  <option value="35">35</option>
+                  <option value="35.5">35.5</option>
+                  <option value="36">36</option>
+                  <option value="36.5">36.5</option>
+                  <option value="37">37</option>
+                  <option value="37.5">37.5</option>
+                  <option value="38">38</option>
+                  <option value="38.5">38.5</option>
+                  <option value="39">39</option>
+                  <option value="39.5">39.5</option>
+                  <option value="40">40</option>
+                  <option value="40.5">40.5</option>
+                  <option value="41">41</option>
+                  <option value="41.5">41.5</option>
+                  <option value="42">42</option>
+                  <option value="42.5">42.5</option>
+                  <option value="43">43</option>
+                  <option value="43.5">43.5</option>
+                  <option value="44">44</option>
+                  <option value="44.5">44.5</option>
+            </select>
           </div>
 
           <div class="col-span-1 space-y-1">
             <label class="text-[10px] font-black uppercase text-slate-400">Tacón</label>
-            <input type="text" id="editTacon"
-              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm" />
+            <select type="text" id="editTacon"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
+                  <option value="0">0 cm (Plano)</option>
+                  <option value="0.5">0.5 cm</option>
+                  <option value="1">1 cm</option>
+                  <option value="1.5">1.5 cm</option>
+                  <option value="2">2 cm</option>
+                  <option value="3">3 cm</option>
+                  <option value="4">4 cm</option>
+                  <option value="5">5 cm</option>
+                  <option value="7">7 cm</option>
+                  <option value="7.5">7.5 cm</option>
+                  <option value="8">8 cm</option>
+                  <option value="8.5">8.5 cm</option>
+            </select>
+          </div>
+
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Ancho</label>
+            <select type="text" id="editAncho"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
+                  <option value="2A (AA)">2A (AA)</option>
+                  <option value="A">A</option>
+                  <option value="B">B (Mediano)</option>
+                  <option value="C">C</option>
+                  <option value="D">D (Ancho)</option>
+                  <option value="E">E</option>
+                  <option value="EE">EE</option>
+                  <option value="EEE">EEE</option>
+            </select>
+          </div>
+
+
+          <div class="col-span-1 space-y-1">
+            <label class="text-[10px] font-black uppercase text-slate-400">Tipo de Suela</label>
+            <select type="text" id="editSuela"
+              class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
+                  <option value="Cuero">Cuero</option>
+                  <option value="Carnaza">Carnaza</option>
+                  <option value="Goma">Goma</option>
+            </select>
           </div>
 
           <div class="col-span-2 space-y-1">
@@ -484,7 +591,19 @@
           </div>
         </div>
       </td>
-      
+
+      <td class="p-5 text-center">
+        <span class="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-600">
+          ${zapato.suela || "N/A"}
+        </span>
+      </td>
+
+      <td class="p-5 text-center">
+        <span class="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-slate-100 text-slate-600">
+          ${zapato.ancho || "N/A"}
+        </span>
+      </td>
+
       <td class="p-5 text-center">
         <span class="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest
           ${zapato.categoria === "Dama" ? "bg-pink-100 text-pink-600" : "bg-blue-100 text-blue-600"}">
@@ -540,6 +659,8 @@
       formData.append("color", document.getElementById("color").value);
       formData.append("talla", document.getElementById("talla").value);
       formData.append("tacon", document.getElementById("tacon").value);
+      formData.append("ancho", document.getElementById("ancho").value);
+      formData.append("suela", document.getElementById("suela").value);
       formData.append("costo", document.getElementById("costo").value);
       formData.append("precioVenta", document.getElementById("precioVenta").value);
       formData.append("stock", document.getElementById("cantidad").value);
@@ -571,8 +692,10 @@
         document.getElementById("editColor").value = z.color;
         document.getElementById("editTalla").value = z.talla;
         document.getElementById("editTacon").value = z.tacon;
+        document.getElementById("editAncho").value = z.ancho;
         document.getElementById("editStock").value = z.stock;
         document.getElementById("editCat").value = z.categoria;
+        document.getElementById("editSuela").value = z.suela;
         document.getElementById("editCosto").value = z.costo;
         document.getElementById("editPrecioVenta").value = z.precioVenta;
         document.getElementById("modalEditar").style.display = "flex";
@@ -591,11 +714,14 @@
           color: document.getElementById("editColor").value,
           talla: document.getElementById("editTalla").value,
           tacon: document.getElementById("editTacon").value,
+          ancho: document.getElementById("editAncho").value,
+          suela: document.getElementById("editSuela").value,
           stock: Number(document.getElementById("editStock").value),
           costo: Number(document.getElementById("editCosto").value),
           precioVenta: Number(
             document.getElementById("editPrecioVenta").value,
           ),
+
         };
 
         // Validación simple antes de enviar

@@ -150,29 +150,33 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-20">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-20">
 
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 custom-shadow lg:col-span-2">
-                            <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">📈 Curva de
-                                Ventas por Día</h3>
+                            <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">📈 Curva de Ventas por Día</h3>
                             <div class="relative h-[300px] w-full">
                                 <canvas id="chartCurvaVentas"></canvas>
                             </div>
                         </div>
 
                         <div class="bg-white p-6 rounded-2xl border border-slate-200 custom-shadow">
-                            <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">🍩 Gastos
-                                por Categoría</h3>
+                            <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">🍩 Gastos por Categoría</h3>
                             <div class="relative h-[300px] w-full flex items-center justify-center">
                                 <canvas id="chartGastos"></canvas>
                             </div>
                         </div>
 
-                        <div class="bg-white p-6 rounded-2xl border border-slate-200 custom-shadow lg:col-span-3">
-                            <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">🏆 Top 5
-                                Zapatos Más Vendidos (Unidades)</h3>
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 custom-shadow lg:col-span-2">
+                            <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">🏆 Top 10 Zapatos Más Vendidos</h3>
                             <div class="relative h-[300px] w-full">
-                                <canvas id="chartTopProductos"></canvas>
+                                <canvas id="chartTopZapatos"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 custom-shadow">
+                            <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-tight mb-4">📏 Top 10 Tallas</h3>
+                            <div class="relative h-[300px] w-full">
+                                <canvas id="chartTopTallas"></canvas>
                             </div>
                         </div>
 
@@ -182,30 +186,33 @@
         </main>
     </div>
 
-    <script>
+<script>
         let ventasRaw = [];
         let gastosRaw = [];
+        let inventarioRaw = [];
 
-        // Variables para destruir los gráficos anteriores y no superponerlos
+        // Variables de los 4 gráficos
         let grafCurva = null;
         let grafGastos = null;
-        let grafTop = null;
+        let grafTopZapatos = null;
+        let grafTopTallas = null;
 
         async function init() {
             await cargarDatos();
-            procesarReportes(); // Renderiza por primera vez con todos los datos
+            procesarReportes(); 
         }
 
         async function cargarDatos() {
             try {
-                // LLamamos a nuestras APIs
-                const [resVentas, resGastos] = await Promise.all([
+                const [resVentas, resGastos, resInventario] = await Promise.all([
                     fetch("/api/ventas").catch(() => ({ ok: false })),
-                    fetch("/api/gastos").catch(() => ({ ok: false }))
+                    fetch("/api/gastos").catch(() => ({ ok: false })),
+                    fetch("/api/inventario").catch(() => ({ ok: false })) 
                 ]);
 
                 if (resVentas.ok) ventasRaw = await resVentas.json();
                 if (resGastos.ok) gastosRaw = await resGastos.json();
+                if (resInventario.ok) inventarioRaw = await resInventario.json();
 
             } catch (error) {
                 console.error("Error conectando al backend para reportes", error);
@@ -213,9 +220,7 @@
             }
         }
 
-        // --- NORMALIZADOR DE FECHAS ---
         function parsearFechaVenta(fechaStr) {
-            // Convierte "15/4/2026, 19:41:36" a "2026-04-15"
             if (!fechaStr) return "";
             const [fechaPart] = fechaStr.split(',');
             const partes = fechaPart.trim().split('/');
@@ -225,12 +230,10 @@
             return `${ano}-${mes}-${dia}`;
         }
 
-        // --- MOTOR PRINCIPAL DE PROCESAMIENTO ---
         function procesarReportes() {
             const fechaDesde = document.getElementById('filtroDesde').value;
             const fechaHasta = document.getElementById('filtroHasta').value;
 
-            // 1. Filtrar Ventas
             const ventasFiltradas = ventasRaw.filter(v => {
                 const fechaV = parsearFechaVenta(v.fechaHora);
                 if (fechaDesde && fechaV < fechaDesde) return false;
@@ -238,15 +241,13 @@
                 return true;
             });
 
-            // 2. Filtrar Gastos
             const gastosFiltrados = gastosRaw.filter(g => {
-                const fechaG = g.fechaGasto; // Ya viene en YYYY-MM-DD
+                const fechaG = g.fechaGasto; 
                 if (fechaDesde && fechaG < fechaDesde) return false;
                 if (fechaHasta && fechaG > fechaHasta) return false;
                 return true;
             });
 
-            // 3. Calcular KPIs
             const totalVentas = ventasFiltradas.reduce((sum, v) => sum + Number(v.total), 0);
             const totalGastos = gastosFiltrados.reduce((sum, g) => sum + Number(g.valor), 0);
             const gananciaNeta = totalVentas - totalGastos;
@@ -255,7 +256,6 @@
             document.getElementById('kpiGastos').textContent = `$${totalGastos.toLocaleString()}`;
             document.getElementById('kpiGanancia').textContent = `$${gananciaNeta.toLocaleString()}`;
 
-            // Cambiar color de ganancia si es negativa
             const gananciaElement = document.getElementById('kpiGanancia');
             if (gananciaNeta < 0) {
                 gananciaElement.className = "text-3xl font-extrabold text-red-500 relative z-10";
@@ -263,10 +263,11 @@
                 gananciaElement.className = "text-3xl font-extrabold text-emerald-400 relative z-10";
             }
 
-            // 4. Renderizar Gráficos
+            // Llamamos a los 4 gráficos
             generarGraficoCurvaVentas(ventasFiltradas);
             generarGraficoGastos(gastosFiltrados);
-            generarGraficoTopProductos(ventasFiltradas);
+            generarGraficoTopZapatos(ventasFiltradas);
+            generarGraficoTopTallas(ventasFiltradas);
         }
 
         function limpiarFiltros() {
@@ -275,19 +276,16 @@
             procesarReportes();
         }
 
-        // --- GRÁFICO 1: CURVA DE VENTAS ---
         function generarGraficoCurvaVentas(ventas) {
             const ctx = document.getElementById('chartCurvaVentas').getContext('2d');
-            if (grafCurva) grafCurva.destroy(); // Limpiar viejo
+            if (grafCurva) grafCurva.destroy(); 
 
-            // Agrupar ventas por día
             const ventasPorDia = {};
             ventas.forEach(v => {
                 const fecha = parsearFechaVenta(v.fechaHora);
                 ventasPorDia[fecha] = (ventasPorDia[fecha] || 0) + Number(v.total);
             });
 
-            // Ordenar fechas cronológicamente
             const labels = Object.keys(ventasPorDia).sort();
             const data = labels.map(l => ventasPorDia[l]);
 
@@ -298,7 +296,7 @@
                     datasets: [{
                         label: 'Ventas Diarias ($)',
                         data: data,
-                        borderColor: '#2563eb', // Blue-600
+                        borderColor: '#2563eb', 
                         backgroundColor: 'rgba(37, 99, 235, 0.1)',
                         borderWidth: 3,
                         pointBackgroundColor: '#fff',
@@ -306,7 +304,7 @@
                         pointBorderWidth: 2,
                         pointRadius: 4,
                         fill: true,
-                        tension: 0.4 // Curva suave
+                        tension: 0.4 
                     }]
                 },
                 options: {
@@ -320,7 +318,6 @@
             });
         }
 
-        // --- GRÁFICO 2: GASTOS POR CATEGORÍA ---
         function generarGraficoGastos(gastos) {
             const ctx = document.getElementById('chartGastos').getContext('2d');
             if (grafGastos) grafGastos.destroy();
@@ -332,7 +329,6 @@
 
             const labels = Object.keys(categoriasObj);
             const data = Object.values(categoriasObj);
-            // Paleta de colores atractiva
             const colores = ['#f43f5e', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
 
             grafGastos = new Chart(ctx, {
@@ -348,7 +344,7 @@
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    cutout: '70%', // Grosor de la dona
+                    cutout: '70%',
                     plugins: {
                         legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Plus Jakarta Sans', weight: 'bold' } } }
                     }
@@ -356,57 +352,84 @@
             });
         }
 
-        // --- GRÁFICO 3: TOP 5 PRODUCTOS ---
-        function generarGraficoTopProductos(ventas) {
-            const ctx = document.getElementById('chartTopProductos').getContext('2d');
-            if (grafTop) grafTop.destroy();
+        // --- NUEVO: Gráfico Barras Top 10 Zapatos ---
+        function generarGraficoTopZapatos(ventas) {
+            const ctx = document.getElementById('chartTopZapatos').getContext('2d');
+            if (grafTopZapatos) grafTopZapatos.destroy();
 
-            const conteoProductos = {};
-
-            // Recorrer ventas y luego los productos dentro de la venta
+            const conteo = {};
             ventas.forEach(v => {
                 v.productos.forEach(p => {
-                    conteoProductos[p.referencia] = (conteoProductos[p.referencia] || 0) + Number(p.cantidad);
+                    conteo[p.referencia] = (conteo[p.referencia] || 0) + Number(p.cantidad);
                 });
             });
 
-            // Convertir a Array, ordenar de mayor a menor y tomar los primeros 5
-            const top5 = Object.entries(conteoProductos)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
+            const top10 = Object.entries(conteo).sort((a, b) => b[1] - a[1]).slice(0, 10);
 
-            const labels = top5.map(item => item[0]); // Referencias
-            const data = top5.map(item => item[1]); // Cantidades
-
-            grafTop = new Chart(ctx, {
+            grafTopZapatos = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: top10.map(item => item[0]), // Nombres de zapatos
                     datasets: [{
                         label: 'Unidades Vendidas',
-                        data: data,
-                        backgroundColor: '#10b981', // Emerald-500
-                        borderRadius: 8,
-                        barPercentage: 0.6
+                        data: top10.map(item => item[1]),
+                        backgroundColor: '#10b981', // Verde Esmeralda
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true, grid: { borderDash: [5, 5] }, ticks: { stepSize: 1 } },
+                        y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [5, 5] } },
                         x: { grid: { display: false } }
                     }
                 }
             });
         }
 
-        // --- EXPORTAR A EXCEL (SHEETJS) ---
+        // --- NUEVO: Gráfico Barras Top 10 Tallas ---
+        function generarGraficoTopTallas(ventas) {
+            const ctx = document.getElementById('chartTopTallas').getContext('2d');
+            if (grafTopTallas) grafTopTallas.destroy();
+
+            const conteo = {};
+            ventas.forEach(v => {
+                v.productos.forEach(p => {
+                    if(p.talla) {
+                        conteo[p.talla] = (conteo[p.talla] || 0) + Number(p.cantidad);
+                    }
+                });
+            });
+
+            const top10 = Object.entries(conteo).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+            grafTopTallas = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: top10.map(item => item[0]), // Tallas
+                    datasets: [{
+                        label: 'Unidades Vendidas',
+                        data: top10.map(item => item[1]),
+                        backgroundColor: '#3b82f6', // Azul
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [5, 5] } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
         function exportarExcel() {
             const fechaDesde = document.getElementById('filtroDesde').value;
             const fechaHasta = document.getElementById('filtroHasta').value;
 
-            // Filtramos igual que en el tablero
             const ventasFiltradas = ventasRaw.filter(v => {
                 const fV = parsearFechaVenta(v.fechaHora);
                 if (fechaDesde && fV < fechaDesde) return false;
@@ -421,7 +444,6 @@
                 return true;
             });
 
-            // 1. Preparar datos de Ventas para Excel (Aplanando los arrays de productos)
             const filasVentas = [];
             ventasFiltradas.forEach(v => {
                 v.productos.forEach(p => {
@@ -433,13 +455,11 @@
                         "Tacón": p.tacon,
                         "Unidades": p.cantidad,
                         "Precio Unitario Cobrado": p.precioCobrado,
-                        "Subtotal Producto": p.cantidad * p.precioCobrado,
-                        "Total Venta": v.total // Total global de la factura
+                        "Total Venta": v.total 
                     });
                 });
             });
 
-            // 2. Preparar datos de Gastos para Excel
             const filasGastos = gastosFiltrados.map(g => ({
                 "ID Gasto": g.id,
                 "Fecha Gasto": g.fechaGasto,
@@ -449,28 +469,39 @@
                 "Registrado Por": g.registradoPor
             }));
 
-            // Validar que haya datos
-            if (filasVentas.length === 0 && filasGastos.length === 0) {
-                alert("No hay datos en este rango de fechas para exportar.");
+            const filasInventario = inventarioRaw.map(i => ({
+                "Referencia": i.referencia,
+                "Categoría": i.categoria,
+                "Color": i.color || "N/A",
+                "Talla": i.talla || "N/A",
+                "Tacón": i.tacon || "N/A",
+                "Stock Disponible": i.stock,
+                "Costo Inversión ($)": i.costo,
+                "Precio Venta ($)": i.precioVenta
+            }));
+
+            if (filasVentas.length === 0 && filasGastos.length === 0 && filasInventario.length === 0) {
+                alert("No hay datos para exportar.");
                 return;
             }
 
-            // Crear el libro de Excel (Workbook)
             const wb = XLSX.utils.book_new();
 
-            // Pestaña Ventas
             if (filasVentas.length > 0) {
                 const wsVentas = XLSX.utils.json_to_sheet(filasVentas);
                 XLSX.utils.book_append_sheet(wb, wsVentas, "Ventas");
             }
 
-            // Pestaña Gastos
             if (filasGastos.length > 0) {
                 const wsGastos = XLSX.utils.json_to_sheet(filasGastos);
                 XLSX.utils.book_append_sheet(wb, wsGastos, "Gastos");
             }
 
-            // Generar archivo y descargar
+            if (filasInventario.length > 0) {
+                const wsInventario = XLSX.utils.json_to_sheet(filasInventario);
+                XLSX.utils.book_append_sheet(wb, wsInventario, "Inventario Actual");
+            }
+
             const sufijo = (fechaDesde && fechaHasta) ? `${fechaDesde}_al_${fechaHasta}` : 'Historico';
             XLSX.writeFile(wb, `Reporte_Financiero_MD_${sufijo}.xlsx`);
         }
@@ -484,10 +515,10 @@
             document.getElementById("userInitial").textContent = inicial;
         }
 
-        // Arrancar
         init();
         cargarInfoUsuario();
     </script>
+
 </body>
 
 </html>
