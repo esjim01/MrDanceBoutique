@@ -448,7 +448,7 @@
             ventasFiltradas.forEach(v => {
                 v.productos.forEach(p => {
                     filasVentas.push({
-                        "ID Venta": `#V-${v.id}`,
+                        "ID Venta": `V-${v.id}`,
                         "Fecha y Hora": v.fechaHora,
                         "Referencia Zapato": p.referencia,
                         "Talla": p.talla,
@@ -461,7 +461,7 @@
             });
 
             const filasGastos = gastosFiltrados.map(g => ({
-                "ID Gasto": `#G-${g.id}`,
+                "ID Gasto": `G-${g.id}`,
                 "Fecha Gasto": g.fechaGasto,
                 "Categoría": g.categoria,
                 "Concepto": g.concepto,
