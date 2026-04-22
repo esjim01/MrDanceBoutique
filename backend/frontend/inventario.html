@@ -8,6 +8,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
     rel="stylesheet" />
+  <script>
+    // Validar si existe la sesión ANTES de renderizar la página
+    if (!localStorage.getItem("userNombre")) {
+      // Usamos replace() en lugar de href para que no puedan usar el botón "Atrás" del navegador
+      window.location.replace("index.html");
+    }
+  </script>
   <style>
     body {
       font-family: "Plus Jakarta Sans", sans-serif;
@@ -24,6 +31,8 @@
         0 8px 10px -6px rgba(0, 0, 0, 0.1);
     }
   </style>
+
+
 </head>
 
 <body class="text-slate-800">
@@ -405,36 +414,36 @@
             <label class="text-[10px] font-black uppercase text-slate-400">Talla</label>
             <select type="text" id="editTalla"
               class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
-                  <option value="30">30</option>
-                  <option value="30.5">30.5</option>
-                  <option value="31">31</option>
-                  <option value="31.5">31.5</option>
-                  <option value="32">32</option>
-                  <option value="32.5">32.5</option>
-                  <option value="33">33</option>
-                  <option value="33.5">33.5</option>
-                  <option value="34">34</option>
-                  <option value="34.5">34.5</option>
-                  <option value="35">35</option>
-                  <option value="35.5">35.5</option>
-                  <option value="36">36</option>
-                  <option value="36.5">36.5</option>
-                  <option value="37">37</option>
-                  <option value="37.5">37.5</option>
-                  <option value="38">38</option>
-                  <option value="38.5">38.5</option>
-                  <option value="39">39</option>
-                  <option value="39.5">39.5</option>
-                  <option value="40">40</option>
-                  <option value="40.5">40.5</option>
-                  <option value="41">41</option>
-                  <option value="41.5">41.5</option>
-                  <option value="42">42</option>
-                  <option value="42.5">42.5</option>
-                  <option value="43">43</option>
-                  <option value="43.5">43.5</option>
-                  <option value="44">44</option>
-                  <option value="44.5">44.5</option>
+              <option value="30">30</option>
+              <option value="30.5">30.5</option>
+              <option value="31">31</option>
+              <option value="31.5">31.5</option>
+              <option value="32">32</option>
+              <option value="32.5">32.5</option>
+              <option value="33">33</option>
+              <option value="33.5">33.5</option>
+              <option value="34">34</option>
+              <option value="34.5">34.5</option>
+              <option value="35">35</option>
+              <option value="35.5">35.5</option>
+              <option value="36">36</option>
+              <option value="36.5">36.5</option>
+              <option value="37">37</option>
+              <option value="37.5">37.5</option>
+              <option value="38">38</option>
+              <option value="38.5">38.5</option>
+              <option value="39">39</option>
+              <option value="39.5">39.5</option>
+              <option value="40">40</option>
+              <option value="40.5">40.5</option>
+              <option value="41">41</option>
+              <option value="41.5">41.5</option>
+              <option value="42">42</option>
+              <option value="42.5">42.5</option>
+              <option value="43">43</option>
+              <option value="43.5">43.5</option>
+              <option value="44">44</option>
+              <option value="44.5">44.5</option>
             </select>
           </div>
 
@@ -442,18 +451,21 @@
             <label class="text-[10px] font-black uppercase text-slate-400">Tacón</label>
             <select type="text" id="editTacon"
               class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
-                  <option value="0">0 cm (Plano)</option>
-                  <option value="0.5">0.5 cm</option>
-                  <option value="1">1 cm</option>
-                  <option value="1.5">1.5 cm</option>
-                  <option value="2">2 cm</option>
-                  <option value="3">3 cm</option>
-                  <option value="4">4 cm</option>
-                  <option value="5">5 cm</option>
-                  <option value="7">7 cm</option>
-                  <option value="7.5">7.5 cm</option>
-                  <option value="8">8 cm</option>
-                  <option value="8.5">8.5 cm</option>
+              <option value="0">0 cm (Plano)</option>
+              <option value="0.5">0.5 cm</option>
+              <option value="1">1 cm</option>
+              <option value="1.5">1.5 cm</option>
+              <option value="2">2 cm</option>
+              <option value="3">3 cm</option>
+              <option value="4">4 cm</option>
+              <option value="5">5 cm</option>
+              <option value="5.5">5.5 cm</option>
+              <option value="6">6 cm</option>
+              <option value="6.5">6.5 cm</option>
+              <option value="7">7 cm</option>
+              <option value="7.5">7.5 cm</option>
+              <option value="8">8 cm</option>
+              <option value="8.5">8.5 cm</option>
             </select>
           </div>
 
@@ -461,14 +473,14 @@
             <label class="text-[10px] font-black uppercase text-slate-400">Ancho</label>
             <select type="text" id="editAncho"
               class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
-                  <option value="2A (AA)">2A (AA)</option>
-                  <option value="A">A</option>
-                  <option value="B">B (Mediano)</option>
-                  <option value="C">C</option>
-                  <option value="D">D (Ancho)</option>
-                  <option value="E">E</option>
-                  <option value="EE">EE</option>
-                  <option value="EEE">EEE</option>
+              <option value="2A (AA)">2A (AA)</option>
+              <option value="A">A</option>
+              <option value="B">B (Mediano)</option>
+              <option value="C">C</option>
+              <option value="D">D (Ancho)</option>
+              <option value="E">E</option>
+              <option value="EE">EE</option>
+              <option value="EEE">EEE</option>
             </select>
           </div>
 
@@ -477,9 +489,9 @@
             <label class="text-[10px] font-black uppercase text-slate-400">Tipo de Suela</label>
             <select type="text" id="editSuela"
               class="w-full border border-slate-200 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none font-semibold text-sm">
-                  <option value="Cuero">Cuero</option>
-                  <option value="Carnaza">Carnaza</option>
-                  <option value="Goma">Goma</option>
+              <option value="Cuero">Cuero</option>
+              <option value="Carnaza">Carnaza</option>
+              <option value="Goma">Goma</option>
             </select>
           </div>
 
